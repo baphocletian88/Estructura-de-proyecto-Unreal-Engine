@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UE5 — Naming Conventions & Folder Structure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #171b24;
+    --border: #1e2535;
+    --accent: #4f8eff;
+    --accent2: #7c5cfc;
+    --accent3: #00e5c3;
+    --warn: #ff6b35;
+    --text: #e8ecf4;
+    --text-muted: #7a8499;
+    --text-dim: #4a5568;
+    --prefix-bg: #0d1e3a;
+    --prefix-border: #1a3a6b;
+    --code-bg: #0d1117;
+    --green: #2dde98;
+    --red: #ff4d6d;
+    --yellow: #ffd166;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: .4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 12, 16, 0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    height: 64px;
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .3px;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    padding: 100px 48px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: var(--accent3);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--accent3);
+  }
+
+  .hero h1 {
+    font-size: clamp(42px, 6vw, 76px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 28px;
+  }
+
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 20px;
+    color: var(--text-muted);
+    max-width: 600px;
+    font-weight: 400;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
+
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .3px;
+    border: 1px solid;
+  }
+  .badge-blue { background: rgba(79,142,255,.1); border-color: rgba(79,142,255,.3); color: var(--accent); }
+  .badge-purple { background: rgba(124,92,252,.1); border-color: rgba(124,92,252,.3); color: var(--accent2); }
+  .badge-teal { background: rgba(0,229,195,.1); border-color: rgba(0,229,195,.3); color: var(--accent3); }
+
+  .hero-glow {
+    position: absolute;
+    top: -100px;
+    right: -150px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(79,142,255,.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── LAYOUT ── */
+  .page-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 48px 120px;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 96px;
+    scroll-margin-top: 80px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    margin-bottom: 48px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    padding-bottom: 4px;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+
+  /* ── INTRO CARDS ── */
+  .intro-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  .intro-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .25s, transform .25s;
+  }
+  .intro-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+  .intro-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity .25s;
+  }
+  .intro-card:hover::before { opacity: 1; }
+
+  .card-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  .card-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── FORMULA BOX ── */
+  .formula-box {
+    background: var(--code-bg);
+    border: 1px solid var(--prefix-border);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .formula-box::before {
+    content: 'FÓRMULA BASE';
+    position: absolute;
+    top: 16px;
+    left: 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+  }
+
+  .formula {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(16px, 2.5vw, 24px);
+    margin-bottom: 32px;
+  }
+
+  .f-part {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+  .f-prefix { background: rgba(79,142,255,.18); color: var(--accent); border: 1px solid rgba(79,142,255,.3); }
+  .f-base { background: rgba(0,229,195,.12); color: var(--accent3); border: 1px solid rgba(0,229,195,.25); }
+  .f-variant { background: rgba(124,92,252,.12); color: var(--accent2); border: 1px solid rgba(124,92,252,.25); }
+  .f-suffix { background: rgba(255,107,53,.12); color: var(--warn); border: 1px solid rgba(255,107,53,.25); }
+  .f-sep { color: var(--text-dim); font-size: 20px; }
+
+  .formula-parts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    text-align: left;
+  }
+
+  .fp-item {
+    padding: 14px 18px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.03);
+  }
+
+  .fp-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .fp-label.blue { color: var(--accent); }
+  .fp-label.teal { color: var(--accent3); }
+  .fp-label.purple { color: var(--accent2); }
+  .fp-label.orange { color: var(--warn); }
+
+  .fp-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ── EXAMPLE PILL ── */
+  .example-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    margin: 4px;
+  }
+  .ep-prefix { background: rgba(79,142,255,.2); color: var(--accent); padding: 6px 12px; }
+  .ep-base { background: rgba(0,229,195,.1); color: var(--accent3); padding: 6px 12px; }
+  .ep-variant { background: rgba(124,92,252,.1); color: var(--accent2); padding: 6px 12px; }
+  .ep-suffix { background: rgba(255,107,53,.1); color: var(--warn); padding: 6px 12px; }
+
+  /* ── PREFIX TABLE ── */
+  .prefix-table-wrap {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+  }
+
+  thead th {
+    background: var(--surface2);
+    padding: 16px 24px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  tbody td {
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    font-size: 15px;
+    vertical-align: top;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: rgba(255,255,255,.02); }
+
+  .td-prefix {
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .td-suffix {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--warn);
+  }
+
+  .td-example {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .td-type { color: var(--text); font-weight: 500; }
+  .td-desc { color: var(--text-muted); font-size: 14px; }
+
+  /* category rows */
+  .cat-row td {
+    background: var(--surface2);
+    color: var(--accent3);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 10px 24px;
+  }
+
+  /* prefix color coding */
+  .p-blue { color: var(--accent); }
+  .p-teal { color: var(--accent3); }
+  .p-purple { color: var(--accent2); }
+  .p-orange { color: var(--warn); }
+  .p-green { color: var(--green); }
+  .p-yellow { color: var(--yellow); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    display: flex;
+    gap: 16px;
+    padding: 20px 24px;
+    border-radius: 12px;
+    margin: 24px 0;
+    border-left: 3px solid;
+  }
+  .callout-info { background: rgba(79,142,255,.07); border-color: var(--accent); }
+  .callout-warn { background: rgba(255,107,53,.07); border-color: var(--warn); }
+  .callout-tip { background: rgba(0,229,195,.07); border-color: var(--accent3); }
+
+  .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .callout-body { font-size: 15px; color: var(--text-muted); }
+  .callout-body strong { color: var(--text); font-weight: 600; }
+
+  /* ── TEXTURE SUFFIX TABLE ── */
+  .suffix-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+  }
+
+  .suffix-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .suffix-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--warn);
+    background: rgba(255,107,53,.12);
+    padding: 6px 12px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    min-width: 48px;
+    text-align: center;
+  }
+
+  .suffix-name {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.3;
+  }
+
+  /* ── FOLDER STRUCTURE ── */
+  .tree {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    line-height: 2;
+    overflow-x: auto;
+  }
+
+  .tree-line { display: flex; align-items: center; gap: 8px; }
+
+  .t-root { color: var(--accent); font-weight: 700; font-size: 16px; }
+  .t-l1 { color: var(--accent3); font-weight: 700; }
+  .t-l2 { color: var(--text); }
+  .t-l3 { color: var(--text-muted); }
+  .t-branch { color: var(--text-dim); }
+  .t-note {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-left: 8px;
+    font-style: italic;
+  }
+  .t-tag {
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .t-core { background: rgba(255,107,53,.15); color: var(--warn); }
+  .t-shared { background: rgba(124,92,252,.15); color: var(--accent2); }
+  .t-maps { background: rgba(79,142,255,.15); color: var(--accent); }
+
+  /* ── EXAMPLE PROJECT ── */
+  .example-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 48px;
+  }
+
+  .example-header {
+    background: var(--surface2);
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .example-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+  .dot-r { background: #ff5f56; }
+  .dot-y { background: #ffbd2e; }
+  .dot-g { background: #27c93f; }
+
+  .example-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  .example-body {
+    padding: 32px;
+  }
+
+  /* ── ASSET EXAMPLE BLOCKS ── */
+  .asset-group {
+    margin-bottom: 40px;
+  }
+
+  .asset-group-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .asset-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .asset-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 280px;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: var(--code-bg);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.04);
+    transition: border-color .2s;
+  }
+  .asset-item:hover { border-color: var(--border); }
+
+  .asset-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .asset-path {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .asset-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: right;
+  }
+
+  /* ── RULES BOX ── */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 32px 0;
+  }
+
+  .rules-col {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+  }
+
+  .rules-col.good { border-top: 3px solid var(--green); }
+  .rules-col.bad { border-top: 3px solid var(--red); }
+
+  .rules-col-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .rules-col.good .rules-col-title { color: var(--green); }
+  .rules-col.bad .rules-col-title { color: var(--red); }
+
+  .rule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-size: 14px;
+  }
+
+  .rule-icon { flex-shrink: 0; margin-top: 1px; font-size: 15px; }
+  .rule-text { color: var(--text-muted); line-height: 1.5; }
+  .rule-text code {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    background: rgba(255,255,255,.06);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--text);
+  }
+
+  /* ── VISUAL DIAGRAM ── */
+  .diagram-container {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px;
+    margin: 32px 0;
+    overflow-x: auto;
+  }
+
+  .diagram-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  .diagram-root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .d-node {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    border: 2px solid;
+    white-space: nowrap;
+  }
+
+  .d-root { background: rgba(79,142,255,.15); border-color: var(--accent); color: var(--accent); font-size: 16px; }
+  .d-main { background: rgba(0,229,195,.1); border-color: rgba(0,229,195,.4); color: var(--accent3); font-size: 13px; }
+  .d-sub { background: rgba(255,255,255,.04); border-color: var(--border); color: var(--text-muted); font-size: 12px; font-family: 'Outfit', sans-serif; font-weight: 500; }
+
+  .d-line {
+    width: 2px;
+    height: 24px;
+    background: var(--border);
+    margin: 0 auto;
+  }
+
+  .d-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .d-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .d-children {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-top: 0;
+  }
+
+  .d-connector-h {
+    height: 2px;
+    background: var(--border);
+    flex: 1;
+    min-width: 20px;
+  }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 64px 0;
+  }
+
+  /* ── FOOTER / AUTHOR ── */
+  .author-section {
+    position: relative;
+    padding: 80px 48px;
+    text-align: center;
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+  }
+
+  .author-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(124,92,252,.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .author-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .author-name {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 900;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+
+  .author-credit {
+    font-size: 16px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .author-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent3));
+    margin: 24px auto;
+    border-radius: 2px;
+  }
+
+  .author-ref {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 24px;
+  }
+
+  .author-ref a {
+    color: var(--accent);
+    text-decoration: none;
+    opacity: .7;
+    transition: opacity .2s;
+  }
+  .author-ref a:hover { opacity: 1; }
+
+  /* ── MISC ── */
+  .mono { font-family: 'Space Mono', monospace; }
+
+  .highlight-inline {
+    font-family: 'Space Mono', monospace;
+    font-size: .88em;
+    background: rgba(79,142,255,.12);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 5px;
+    border: 1px solid rgba(79,142,255,.2);
+  }
+
+  .lead {
+    font-size: 19px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  h3 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 40px 0 16px;
+    color: var(--text);
+  }
+
+  h4 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin: 28px 0 12px;
+    letter-spacing: .3px;
+  }
+
+  p { margin-bottom: 16px; color: var(--text-muted); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .hero, .page-wrap { padding-left: 24px; padding-right: 24px; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .asset-item { grid-template-columns: 1fr; }
+    .asset-desc { text-align: left; }
+    .formula { font-size: 14px; }
+    .tree { font-size: 12px; padding: 24px; }
+    .author-section { padding: 60px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">UE5 · Style Guide</div>
+  <ul class="nav-links">
+    <li><a href="#naming">Naming Conventions</a></li>
+    <li><a href="#prefixes">Prefijos & Sufijos</a></li>
+    <li><a href="#folders">Estructura de Carpetas</a></li>
+    <li><a href="#example">Ejemplo Guiado</a></li>
+    <li><a href="#rules">Reglas de Oro</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-eyebrow">Guía Docente · Unreal Engine 5</div>
+  <h1>Naming Conventions<br>&amp; <span>Folder Structure</span></h1>
+  <p class="hero-sub">Aprende a organizar y nombrar correctamente tus assets en UE5 desde el primer día, siguiendo estándares reales de producción.</p>
+  <div class="hero-badges">
+    <span class="badge badge-blue">📁 Folder Structure</span>
+    <span class="badge badge-purple">🏷 Naming Conventions</span>
+    <span class="badge badge-teal">⚡ Production Ready</span>
+  </div>
+</div>
+
+<!-- PAGE CONTENT -->
+<div class="page-wrap">
+
+  <!-- ═══════════════ SECTION 1: NAMING ═══════════════ -->
+  <section class="section" id="naming">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <h2 class="section-title">¿Por qué Naming Conventions?</h2>
+    </div>
+
+    <p class="lead">Las naming conventions son el lenguaje común de tu proyecto. Un proyecto que las sigue puede ser gestionado, buscado y mantenido con increíble facilidad —sin importar cuántas personas trabajen en él.</p>
+
+    <div class="intro-grid">
+      <div class="intro-card">
+        <span class="card-icon">🔍</span>
+        <div class="card-title">Búsqueda Instantánea</div>
+        <div class="card-desc">Escribir <span class="highlight-inline">T_</span> en el Content Browser filtra únicamente las texturas. Sin convenciones, buscar un asset es una pesadilla.</div>
+      </div>
+      <div class="intro-card">
+        <span class="card-icon">🤝</span>
+        <div class="card-title">Trabajo en Equipo</div>
+        <div class="card-desc">Todos los miembros del equipo identifican el tipo de asset a simple vista, sin necesidad de abrir el archivo.</div>
+      </div>
+      <div class="intro-card">
+        <span class="card-icon">🔄</span>
+        <div class="card-title">Migración Sin Conflictos</div>
+        <div class="card-desc">Mover assets entre proyectos sin chocar con nombres duplicados o colisiones de rutas.</div>
+      </div>
+      <div class="intro-card">
+        <span class="card-icon">📐</span>
+        <div class="card-title">Escalabilidad Real</div>
+        <div class="card-desc">Lo que funciona con 50 assets debe funcionar con 5,000. Las convenciones garantizan eso desde el inicio.</div>
+      </div>
+    </div>
+
+    <!-- FORMULA -->
+    <div class="formula-box">
+      <div class="formula">
+        <span class="f-part f-prefix">Prefix_</span>
+        <span class="f-sep">+</span>
+        <span class="f-part f-base">BaseAssetName</span>
+        <span class="f-sep">+</span>
+        <span class="f-part f-variant">_Variant</span>
+        <span class="f-sep">+</span>
+        <span class="f-part f-suffix">_Suffix</span>
+      </div>
+
+      <div class="formula-parts">
+        <div class="fp-item">
+          <div class="fp-label blue">PREFIX</div>
+          <div class="fp-desc">Identifica el tipo de asset. Acrónimo seguido de guión bajo. Ej: <span class="mono" style="color:var(--accent)">BP_</span>, <span class="mono" style="color:var(--accent)">SM_</span></div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-label teal">BASE ASSET NAME</div>
+          <div class="fp-desc">Nombre corto y reconocible del asset o grupo. Ej: <span class="mono" style="color:var(--accent3)">Hero</span>, <span class="mono" style="color:var(--accent3)">Rock</span>, <span class="mono" style="color:var(--accent3)">Door</span></div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-label purple">VARIANT <em style="font-weight:400;font-size:10px">(opcional)</em></div>
+          <div class="fp-desc">Diferencia versiones. Descriptivo o numérico. Ej: <span class="mono" style="color:var(--accent2)">_Evil</span>, <span class="mono" style="color:var(--accent2)">_01</span></div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-label orange">SUFFIX <em style="font-weight:400;font-size:10px">(opcional)</em></div>
+          <div class="fp-desc">Info adicional del tipo. Principalmente en texturas. Ej: <span class="mono" style="color:var(--warn)">_D</span>, <span class="mono" style="color:var(--warn)">_N</span>, <span class="mono" style="color:var(--warn)">_R</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Ejemplos de la fórmula en acción</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 32px">
+      <div class="example-pill"><span class="ep-prefix">BP_</span><span class="ep-base">Hero</span></div>
+      <div class="example-pill"><span class="ep-prefix">SK_</span><span class="ep-base">Goblin</span><span class="ep-variant">_Warrior</span></div>
+      <div class="example-pill"><span class="ep-prefix">SM_</span><span class="ep-base">Rock</span><span class="ep-variant">_01</span></div>
+      <div class="example-pill"><span class="ep-prefix">T_</span><span class="ep-base">Rock</span><span class="ep-suffix">_D</span></div>
+      <div class="example-pill"><span class="ep-prefix">MI_</span><span class="ep-base">Metal</span><span class="ep-variant">_Rusty</span></div>
+      <div class="example-pill"><span class="ep-prefix">T_</span><span class="ep-base">BrickWall</span><span class="ep-suffix">_N</span></div>
+      <div class="example-pill"><span class="ep-prefix">ABP_</span><span class="ep-base">Hero</span></div>
+      <div class="example-pill"><span class="ep-prefix">WBP_</span><span class="ep-base">HUD</span><span class="ep-variant">_Main</span></div>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">💡</span>
+      <div class="callout-body"><strong>PascalCase siempre:</strong> Cada palabra del BaseAssetName comienza en mayúscula, sin espacios. Correcto: <code>DesertEagle</code> · Incorrecto: <code>desert eagle</code>, <code>desert_eagle</code></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ SECTION 2: PREFIXES ═══════════════ -->
+  <section class="section" id="prefixes">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2 class="section-title">Prefijos & Sufijos por Categoría</h2>
+    </div>
+
+    <p class="lead">Cada tipo de asset tiene un prefijo asignado. Memoriza los más comunes — los usarás todos los días.</p>
+
+    <!-- MAIN TABLE -->
+    <div class="prefix-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo de Asset</th>
+            <th>Prefijo</th>
+            <th>Sufijo</th>
+            <th>Ejemplo</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- CORE -->
+          <tr class="cat-row"><td colspan="5">▸ Core Assets — Los más usados</td></tr>
+          <tr>
+            <td class="td-type">Blueprint</td>
+            <td class="td-prefix p-blue">BP_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">BP_Hero</td>
+            <td class="td-desc">Lógica del juego, actores, componentes</td>
+          </tr>
+          <tr>
+            <td class="td-type">Static Mesh</td>
+            <td class="td-prefix p-teal">SM_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">SM_Rock_01</td>
+            <td class="td-desc">Objetos 3D sin animación (props, ambiente)</td>
+          </tr>
+          <tr>
+            <td class="td-type">Skeletal Mesh</td>
+            <td class="td-prefix p-teal">SK_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">SK_Hero</td>
+            <td class="td-desc">Meshes con esqueleto para animación</td>
+          </tr>
+          <tr>
+            <td class="td-type">Material</td>
+            <td class="td-prefix p-purple">M_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">M_Metal_Rusty</td>
+            <td class="td-desc">Material base / master material</td>
+          </tr>
+          <tr>
+            <td class="td-type">Material Instance</td>
+            <td class="td-prefix p-purple">MI_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">MI_Metal_Gold</td>
+            <td class="td-desc">Variante de un material base (más eficiente)</td>
+          </tr>
+          <tr>
+            <td class="td-type">Material Function</td>
+            <td class="td-prefix p-purple">MF_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">MF_BlendLayers</td>
+            <td class="td-desc">Función reutilizable dentro de materiales</td>
+          </tr>
+          <tr>
+            <td class="td-type">Texture</td>
+            <td class="td-prefix p-orange">T_</td>
+            <td class="td-suffix">_D / _N / _R ...</td>
+            <td class="td-example">T_Rock_D</td>
+            <td class="td-desc">Imágenes 2D para materiales. Sufijo indica canal</td>
+          </tr>
+          <tr>
+            <td class="td-type">Widget Blueprint (UI)</td>
+            <td class="td-prefix p-blue">WBP_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">WBP_HUD_Main</td>
+            <td class="td-desc">Interfaces de usuario, HUDs, menús</td>
+          </tr>
+
+          <!-- ANIMATION -->
+          <tr class="cat-row"><td colspan="5">▸ Animación</td></tr>
+          <tr>
+            <td class="td-type">Animation Blueprint</td>
+            <td class="td-prefix p-green">ABP_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">ABP_Hero</td>
+            <td class="td-desc">Controla la lógica de animación del personaje</td>
+          </tr>
+          <tr>
+            <td class="td-type">Animation Sequence</td>
+            <td class="td-prefix p-green">A_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">A_Hero_Run</td>
+            <td class="td-desc">Clip de animación individual</td>
+          </tr>
+          <tr>
+            <td class="td-type">Animation Montage</td>
+            <td class="td-prefix p-green">AM_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">AM_Hero_Attack</td>
+            <td class="td-desc">Combinación de animaciones para gameplay</td>
+          </tr>
+          <tr>
+            <td class="td-type">Blend Space</td>
+            <td class="td-prefix p-green">BS_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">BS_Hero_Locomotion</td>
+            <td class="td-desc">Mezcla de animaciones por velocidad/dirección</td>
+          </tr>
+          <tr>
+            <td class="td-type">Skeleton</td>
+            <td class="td-prefix p-green">SKEL_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">SKEL_Hero</td>
+            <td class="td-desc">Jerarquía de huesos del personaje</td>
+          </tr>
+          <tr>
+            <td class="td-type">Aim Offset</td>
+            <td class="td-prefix p-green">AO_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">AO_Hero_Rifle</td>
+            <td class="td-desc">Offset de puntería para control de dirección</td>
+          </tr>
+
+          <!-- VFX -->
+          <tr class="cat-row"><td colspan="5">▸ Efectos Visuales (VFX)</td></tr>
+          <tr>
+            <td class="td-type">Niagara System</td>
+            <td class="td-prefix p-yellow">NS_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">NS_Fire_Large</td>
+            <td class="td-desc">Sistema de partículas Niagara (UE5 recomendado)</td>
+          </tr>
+          <tr>
+            <td class="td-type">Particle System (Cascade)</td>
+            <td class="td-prefix p-yellow">PS_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">PS_Smoke_Trail</td>
+            <td class="td-desc">Sistema de partículas legacy (UE4 / compatibilidad)</td>
+          </tr>
+
+          <!-- AUDIO -->
+          <tr class="cat-row"><td colspan="5">▸ Audio</td></tr>
+          <tr>
+            <td class="td-type">Sound Wave</td>
+            <td class="td-prefix p-blue">A_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">A_Hero_Footstep</td>
+            <td class="td-desc">Archivo de audio base importado</td>
+          </tr>
+          <tr>
+            <td class="td-type">Sound Cue</td>
+            <td class="td-prefix p-blue">A_</td>
+            <td class="td-suffix">_Cue</td>
+            <td class="td-example">A_Explosion_Cue</td>
+            <td class="td-desc">Lógica de audio: randomización, atenuación</td>
+          </tr>
+
+          <!-- AI -->
+          <tr class="cat-row"><td colspan="5">▸ Inteligencia Artificial</td></tr>
+          <tr>
+            <td class="td-type">Behavior Tree</td>
+            <td class="td-prefix p-teal">BT_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">BT_Enemy_Patrol</td>
+            <td class="td-desc">Árbol de comportamiento del NPC</td>
+          </tr>
+          <tr>
+            <td class="td-type">Blackboard</td>
+            <td class="td-prefix p-teal">BB_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">BB_Enemy</td>
+            <td class="td-desc">Memoria/datos del Behavior Tree</td>
+          </tr>
+          <tr>
+            <td class="td-type">AI Controller</td>
+            <td class="td-prefix p-teal">AIC_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">AIC_Enemy</td>
+            <td class="td-desc">Controlador de IA del personaje</td>
+          </tr>
+
+          <!-- MISC -->
+          <tr class="cat-row"><td colspan="5">▸ Blueprints Especiales & Datos</td></tr>
+          <tr>
+            <td class="td-type">Blueprint Component</td>
+            <td class="td-prefix p-blue">BP_</td>
+            <td class="td-suffix">Component</td>
+            <td class="td-example">BP_InventoryComponent</td>
+            <td class="td-desc">Componente reutilizable para Blueprints</td>
+          </tr>
+          <tr>
+            <td class="td-type">Blueprint Interface</td>
+            <td class="td-prefix p-blue">BPI_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">BPI_Interactable</td>
+            <td class="td-desc">Interfaz para comunicación entre Blueprints</td>
+          </tr>
+          <tr>
+            <td class="td-type">Data Table</td>
+            <td class="td-prefix p-purple">DT_</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">DT_WeaponStats</td>
+            <td class="td-desc">Tabla de datos tipo CSV para balance de juego</td>
+          </tr>
+          <tr>
+            <td class="td-type">Enumeration</td>
+            <td class="td-prefix p-purple">E</td>
+            <td class="td-suffix">—</td>
+            <td class="td-example">EWeaponType</td>
+            <td class="td-desc">Lista de opciones (sin guión bajo en el prefijo)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TEXTURE SUFFIXES -->
+    <h3>Sufijos de Texturas</h3>
+    <p>Las texturas son el único tipo de asset que usa sufijos de forma extensa. El prefijo siempre es <span class="highlight-inline">T_</span>, pero el sufijo indica qué canal contiene la imagen.</p>
+
+    <div class="suffix-grid">
+      <div class="suffix-card"><span class="suffix-tag">_D</span><span class="suffix-name">Diffuse / Albedo / Base Color</span></div>
+      <div class="suffix-card"><span class="suffix-tag">_N</span><span class="suffix-name">Normal Map</span></div>
+      <div class="suffix-card"><span class="suffix-tag">_R</span><span class="suffix-name">Roughness Map</span></div>
+      <div class="suffix-card"><span class="suffix-tag">_M</span><span class="suffix-name">Metallic Map</span></div>
+      <div class="suffix-card"><span class="suffix-tag">_E</span><span class="suffix-name">Emissive Map</span></div>
+      <div class="suffix-card"><span class="suffix-tag">_AO</span><span class="suffix-name">Ambient Occlusion</span></div>
+      <div class="suffix-card"><span class="suffix-tag">_A</span><span class="suffix-name">Alpha / Opacity Mask</span></div>
+      <div class="suffix-card"><span class="suffix-tag">_S</span><span class="suffix-name">Specular Map</span></div>
+      <div class="suffix-card"><span class="suffix-tag">_B</span><span class="suffix-name">Bump Map</span></div>
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">🎯</span>
+      <div class="callout-body">
+        <strong>Texture Packing:</strong> Es común empaquetar múltiples canales en una sola textura para ahorrar memoria. Los sufijos se combinan.
+        <br><br>
+        Ejemplo: RGB con Emissive, Roughness y AO → <code>T_Rock_ERO</code><br>
+        Diffuse con Alpha en canal A → <code>T_Leaf_DA</code>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ SECTION 3: FOLDERS ═══════════════ -->
+  <section class="section" id="folders">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <h2 class="section-title">Estructura de Carpetas</h2>
+    </div>
+
+    <p class="lead">La estructura de carpetas es igual de importante que las naming conventions. Violaciones en cualquiera de las dos genera caos innecesario en el proyecto.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">📌</span>
+      <div class="callout-body">
+        <strong>Principio fundamental:</strong> Organiza por <em>feature / lógica de gameplay</em>, no por tipo de asset. Carpetas como <code>Meshes/</code>, <code>Textures/</code> o <code>Materials/</code> son redundantes cuando usas prefijos correctamente — el Content Browser ya filtra por tipo.
+      </div>
+    </div>
+
+    <h3>Reglas de nomenclatura de carpetas</h3>
+    <div class="rules-grid">
+      <div class="rules-col good">
+        <div class="rules-col-title">✓ Correcto</div>
+        <div class="rule-item"><span class="rule-icon">✅</span><span class="rule-text">Usar <code>PascalCase</code> para nombres de carpetas</span></div>
+        <div class="rule-item"><span class="rule-icon">✅</span><span class="rule-text">Todo dentro de <code>Content/NombreProyecto/</code></span></div>
+        <div class="rule-item"><span class="rule-icon">✅</span><span class="rule-text">Solo letras A-Z, números 0-9 y guión bajo</span></div>
+        <div class="rule-item"><span class="rule-icon">✅</span><span class="rule-text">Nombres cortos, descriptivos y en inglés</span></div>
+        <div class="rule-item"><span class="rule-icon">✅</span><span class="rule-text">Carpeta <code>Maps/</code> dedicada para todos los levels</span></div>
+        <div class="rule-item"><span class="rule-icon">✅</span><span class="rule-text">Carpeta <code>Core/</code> para assets fundamentales del proyecto</span></div>
+      </div>
+      <div class="rules-col bad">
+        <div class="rules-col-title">✗ Incorrecto</div>
+        <div class="rule-item"><span class="rule-icon">❌</span><span class="rule-text">Espacios en nombres: <code>My Assets</code></span></div>
+        <div class="rule-item"><span class="rule-icon">❌</span><span class="rule-text">Assets sueltos en la raíz de <code>Content/</code></span></div>
+        <div class="rule-item"><span class="rule-icon">❌</span><span class="rule-text">Caracteres especiales: <code>@</code>, <code>#</code>, <code>!</code>, <code>-</code></span></div>
+        <div class="rule-item"><span class="rule-icon">❌</span><span class="rule-text">Carpetas por tipo redundante: <code>Textures/</code>, <code>Meshes/</code></span></div>
+        <div class="rule-item"><span class="rule-icon">❌</span><span class="rule-text">Caracteres Unicode o acentos: <code>Animación</code></span></div>
+        <div class="rule-item"><span class="rule-icon">❌</span><span class="rule-text">Carpetas de trabajo personal mezcladas con el proyecto</span></div>
+      </div>
+    </div>
+
+    <h3>Estructura recomendada — Visión general</h3>
+
+    <div class="tree">
+<span style="color:var(--accent3);font-weight:700">Content/</span>
+├── <span style="color:var(--accent);font-weight:700">MyProject/</span>            <span style="color:var(--text-dim);font-style:italic">← Carpeta raíz del proyecto (NUNCA assets fuera de aquí)</span>
+│   ├── <span style="color:var(--accent3)">Art/</span>                  <span style="color:var(--text-dim);font-style:italic">← Assets de arte/ambiente (entorno, decoración)</span>
+│   │   ├── Environment/
+│   │   ├── Nature/
+│   │   └── Industrial/
+│   ├── <span style="color:var(--accent3)">Characters/</span>           <span style="color:var(--text-dim);font-style:italic">← Un subfolder por personaje</span>
+│   │   ├── Hero/
+│   │   │   ├── Animations/
+│   │   │   └── Audio/
+│   │   ├── Enemy/
+│   │   └── Common/               <span style="color:var(--text-dim);font-style:italic">← Assets compartidos entre personajes</span>
+│   ├── <span style="color:var(--warn);font-weight:700">Core/</span>                 <span style="color:var(--text-dim);font-style:italic">← ⚠️ Blueprints fundamentales del proyecto</span>
+│   │   ├── Characters/
+│   │   ├── GameModes/
+│   │   └── Weapons/
+│   ├── <span style="color:var(--accent3)">Effects/</span>              <span style="color:var(--text-dim);font-style:italic">← VFX (Niagara, partículas)</span>
+│   │   ├── Fire/
+│   │   ├── Smoke/
+│   │   └── Combat/
+│   ├── <span style="color:var(--accent);font-weight:700">Maps/</span>                 <span style="color:var(--text-dim);font-style:italic">← Todos los levels van aquí</span>
+│   │   ├── Level_01/
+│   │   └── Level_02/
+│   ├── <span style="color:var(--accent3)">MaterialLibrary/</span>     <span style="color:var(--text-dim);font-style:italic">← Master materials y funciones compartidas</span>
+│   │   ├── Master/
+│   │   ├── Instances/
+│   │   └── Utility/
+│   ├── <span style="color:var(--accent3)">Placeables/</span>          <span style="color:var(--text-dim);font-style:italic">← Actors/props que se instancian en el mundo</span>
+│   │   ├── Weapons/
+│   │   └── Pickups/
+│   ├── <span style="color:var(--accent3)">Sounds/</span>
+│   ├── <span style="color:var(--accent3)">UI/</span>
+│   └── <span style="color:var(--accent3)">Developers/</span>          <span style="color:var(--text-dim);font-style:italic">← Sandbox personal (oculto por defecto)</span>
+│       ├── ChristianMendez/
+│       └── JuanGarcia/
+└── <span style="color:var(--text-dim);font-style:italic">← Nunca assets aquí en la raíz de Content</span>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-body">
+        <strong>Core es zona restringida:</strong> La carpeta <code>Core/</code> contiene los Blueprints fundamentales como GameMode, PlayerController, GameState. Solo desarrolladores senior deberían modificar estos assets. Los estudiantes deben hacer cambios en clases hijas, nunca en los Core assets directamente.
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">🧪</span>
+      <div class="callout-body">
+        <strong>Developers folder:</strong> Usa <code>Developers/TuNombre/</code> como área de sandbox personal para probar assets que aún no están listos. Estos assets no aparecen en búsquedas de otros miembros del equipo.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ SECTION 4: EXAMPLE ═══════════════ -->
+  <section class="section" id="example">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2 class="section-title">Ejemplo Guiado — Proyecto Completo</h2>
+    </div>
+
+    <p class="lead">Veamos cómo aplicar todo lo aprendido en un proyecto de ejemplo llamado <span class="highlight-inline">ShadowRealm</span>. Así debería verse un proyecto bien organizado desde el primer día.</p>
+
+    <div class="example-section">
+      <div class="example-header">
+        <div class="example-dots">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+        </div>
+        <span class="example-title">Content Browser — ShadowRealm</span>
+      </div>
+      <div class="example-body">
+
+        <!-- CHARACTERS -->
+        <div class="asset-group">
+          <div class="asset-group-title">📁 Characters / Hero</div>
+          <div class="asset-list">
+            <div class="asset-item">
+              <span class="asset-name p-blue">BP_Hero</span>
+              <span class="asset-path">Characters/Hero/</span>
+              <span class="asset-desc">Blueprint del personaje principal</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-teal">SK_Hero</span>
+              <span class="asset-path">Characters/Hero/</span>
+              <span class="asset-desc">Skeletal Mesh del héroe</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-teal">SKEL_Hero</span>
+              <span class="asset-path">Characters/Hero/</span>
+              <span class="asset-desc">Esqueleto del héroe</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-green">ABP_Hero</span>
+              <span class="asset-path">Characters/Hero/</span>
+              <span class="asset-desc">Animation Blueprint del héroe</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-green">A_Hero_Idle</span>
+              <span class="asset-path">Characters/Hero/Animations/</span>
+              <span class="asset-desc">Animation Sequence — idle</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-green">A_Hero_Run</span>
+              <span class="asset-path">Characters/Hero/Animations/</span>
+              <span class="asset-desc">Animation Sequence — correr</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-green">AM_Hero_Attack_01</span>
+              <span class="asset-path">Characters/Hero/Animations/</span>
+              <span class="asset-desc">Animation Montage — ataque principal</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-green">BS_Hero_Locomotion</span>
+              <span class="asset-path">Characters/Hero/Animations/</span>
+              <span class="asset-desc">Blend Space — movimiento por velocidad</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MATERIALS & TEXTURES -->
+        <div class="asset-group">
+          <div class="asset-group-title">📁 MaterialLibrary + Characters / Hero</div>
+          <div class="asset-list">
+            <div class="asset-item">
+              <span class="asset-name p-purple">M_Character_Master</span>
+              <span class="asset-path">MaterialLibrary/Master/</span>
+              <span class="asset-desc">Material base para personajes</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-purple">MI_Hero_Default</span>
+              <span class="asset-path">Characters/Hero/</span>
+              <span class="asset-desc">Material Instance del héroe</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-orange">T_Hero_D</span>
+              <span class="asset-path">Characters/Hero/</span>
+              <span class="asset-desc">Textura — Diffuse / Base Color</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-orange">T_Hero_N</span>
+              <span class="asset-path">Characters/Hero/</span>
+              <span class="asset-desc">Textura — Normal Map</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-orange">T_Hero_RMO</span>
+              <span class="asset-path">Characters/Hero/</span>
+              <span class="asset-desc">Textura packed — Roughness + Metallic + AO</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROPS -->
+        <div class="asset-group">
+          <div class="asset-group-title">📁 Placeables / Props</div>
+          <div class="asset-list">
+            <div class="asset-item">
+              <span class="asset-name p-teal">SM_Barrel_01</span>
+              <span class="asset-path">Placeables/Props/</span>
+              <span class="asset-desc">Static Mesh — barril de madera</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-teal">SM_Crate_Wooden_01</span>
+              <span class="asset-path">Placeables/Props/</span>
+              <span class="asset-desc">Static Mesh — caja de madera</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-teal">SM_Crate_Wooden_02</span>
+              <span class="asset-path">Placeables/Props/</span>
+              <span class="asset-desc">Variante 2 de la caja de madera</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-purple">MI_Barrel_Rusty</span>
+              <span class="asset-path">Placeables/Props/</span>
+              <span class="asset-desc">Material Instance — barril oxidado</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- VFX & AUDIO -->
+        <div class="asset-group">
+          <div class="asset-group-title">📁 Effects + Sounds</div>
+          <div class="asset-list">
+            <div class="asset-item">
+              <span class="asset-name p-yellow">NS_Fire_Large</span>
+              <span class="asset-path">Effects/Fire/</span>
+              <span class="asset-desc">Niagara System — fuego grande</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-yellow">NS_Smoke_Black</span>
+              <span class="asset-path">Effects/Smoke/</span>
+              <span class="asset-desc">Niagara System — humo negro</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-yellow">NS_Combat_HitSpark</span>
+              <span class="asset-path">Effects/Combat/</span>
+              <span class="asset-desc">Niagara — impacto de ataque</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-blue">A_Hero_Footstep</span>
+              <span class="asset-path">Sounds/Characters/Hero/</span>
+              <span class="asset-desc">Sound Wave — paso del héroe</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-blue">A_SwordSwing_Cue</span>
+              <span class="asset-path">Sounds/Combat/</span>
+              <span class="asset-desc">Sound Cue — corte de espada aleatorizado</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- UI -->
+        <div class="asset-group">
+          <div class="asset-group-title">📁 UI</div>
+          <div class="asset-list">
+            <div class="asset-item">
+              <span class="asset-name p-blue">WBP_HUD_Main</span>
+              <span class="asset-path">UI/HUD/</span>
+              <span class="asset-desc">Widget Blueprint — HUD principal del juego</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-blue">WBP_Menu_Main</span>
+              <span class="asset-path">UI/Menus/</span>
+              <span class="asset-desc">Widget Blueprint — menú principal</span>
+            </div>
+            <div class="asset-item">
+              <span class="asset-name p-blue">WBP_Inventory</span>
+              <span class="asset-path">UI/Inventory/</span>
+              <span class="asset-desc">Widget Blueprint — pantalla de inventario</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FULL TREE EXAMPLE -->
+    <h3>Árbol completo — ShadowRealm</h3>
+    <div class="tree">
+<span style="color:var(--accent3)">Content/</span>
+└── <span style="color:var(--accent);font-weight:700">ShadowRealm/</span>
+    ├── <span style="color:var(--accent3)">Art/</span>
+    │   ├── <span style="color:var(--text)">Environment/</span>
+    │   │   ├── <span style="color:var(--text-muted)">Rocks/</span>          <span style="color:var(--text-dim);font-style:italic">SM_Rock_01, SM_Rock_02, MI_Rock_Mossy...</span>
+    │   │   ├── <span style="color:var(--text-muted)">Vegetation/</span>
+    │   │   └── <span style="color:var(--text-muted)">Architecture/</span>
+    │   └── <span style="color:var(--text)">Skybox/</span>
+    │
+    ├── <span style="color:var(--accent3)">Characters/</span>
+    │   ├── <span style="color:var(--text)">Hero/</span>
+    │   │   ├── <span style="color:var(--text-muted)">Animations/</span>     <span style="color:var(--text-dim);font-style:italic">A_, AM_, BS_, ABP_...</span>
+    │   │   └── <span style="color:var(--text-dim);font-style:italic">SK_, SKEL_, MI_, T_...</span>
+    │   ├── <span style="color:var(--text)">Enemy/</span>
+    │   │   └── <span style="color:var(--text-muted)">Animations/</span>
+    │   └── <span style="color:var(--text)">Common/</span>
+    │       ├── <span style="color:var(--text-muted)">Animations/</span>
+    │       └── <span style="color:var(--text-muted)">Audio/</span>
+    │
+    ├── <span style="color:var(--warn);font-weight:700">Core/</span>                 <span style="color:var(--warn);font-style:italic">← ⚠️ Solo seniors / no modificar sin autorización</span>
+    │   ├── <span style="color:var(--text-muted)">Characters/</span>       <span style="color:var(--text-dim);font-style:italic">BP_HeroBase, BP_EnemyBase...</span>
+    │   ├── <span style="color:var(--text-muted)">GameModes/</span>
+    │   └── <span style="color:var(--text-muted)">Weapons/</span>
+    │
+    ├── <span style="color:var(--accent3)">Effects/</span>
+    │   ├── <span style="color:var(--text-muted)">Fire/</span>              <span style="color:var(--text-dim);font-style:italic">NS_Fire_Large, NS_Fire_Small...</span>
+    │   ├── <span style="color:var(--text-muted)">Smoke/</span>
+    │   └── <span style="color:var(--text-muted)">Combat/</span>            <span style="color:var(--text-dim);font-style:italic">NS_HitSpark, NS_BloodSplat...</span>
+    │
+    ├── <span style="color:var(--accent);font-weight:700">Maps/</span>
+    │   ├── <span style="color:var(--text-muted)">Level_01/</span>          <span style="color:var(--text-dim);font-style:italic">Dungeon_01_P, _Lighting, _Gameplay...</span>
+    │   └── <span style="color:var(--text-muted)">Level_02/</span>
+    │
+    ├── <span style="color:var(--accent3)">MaterialLibrary/</span>
+    │   ├── <span style="color:var(--text-muted)">Master/</span>            <span style="color:var(--text-dim);font-style:italic">M_Character_Master, M_Prop_Master...</span>
+    │   ├── <span style="color:var(--text-muted)">Instances/</span>
+    │   └── <span style="color:var(--text-muted)">Utility/</span>           <span style="color:var(--text-dim);font-style:italic">MF_BlendLayers, MPC_GlobalParams...</span>
+    │
+    ├── <span style="color:var(--accent3)">Placeables/</span>
+    │   ├── <span style="color:var(--text-muted)">Props/</span>             <span style="color:var(--text-dim);font-style:italic">SM_Barrel, SM_Crate...</span>
+    │   ├── <span style="color:var(--text-muted)">Weapons/</span>           <span style="color:var(--text-dim);font-style:italic">SM_Sword_01, SM_Bow_01...</span>
+    │   └── <span style="color:var(--text-muted)">Pickups/</span>           <span style="color:var(--text-dim);font-style:italic">BP_HealthPotion, BP_Key...</span>
+    │
+    ├── <span style="color:var(--accent3)">Sounds/</span>
+    │   ├── <span style="color:var(--text-muted)">Ambient/</span>
+    │   ├── <span style="color:var(--text-muted)">Characters/</span>
+    │   ├── <span style="color:var(--text-muted)">Combat/</span>
+    │   └── <span style="color:var(--text-muted)">UI/</span>
+    │
+    ├── <span style="color:var(--accent3)">UI/</span>
+    │   ├── <span style="color:var(--text-muted)">HUD/</span>               <span style="color:var(--text-dim);font-style:italic">WBP_HUD_Main...</span>
+    │   ├── <span style="color:var(--text-muted)">Menus/</span>             <span style="color:var(--text-dim);font-style:italic">WBP_Menu_Main, WBP_Menu_Pause...</span>
+    │   └── <span style="color:var(--text-muted)">Inventory/</span>
+    │
+    └── <span style="color:var(--text)">Developers/</span>          <span style="color:var(--text-dim);font-style:italic">← Sandbox personal (oculto por defecto en Content Browser)</span>
+        ├── <span style="color:var(--text-dim)">ChristianMendez/</span>
+        └── <span style="color:var(--text-dim)">JuanGarcia/</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════ SECTION 5: GOLDEN RULES ═══════════════ -->
+  <section class="section" id="rules">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2 class="section-title">Reglas de Oro</h2>
+    </div>
+
+    <p class="lead">Estos son los principios que debes interiorizar como ley. Sin excepciones.</p>
+
+    <div class="intro-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))">
+      <div class="intro-card">
+        <span class="card-icon">⚖️</span>
+        <div class="card-title">Las convenciones son ley</div>
+        <div class="card-desc">Un proyecto que las sigue se puede gestionar, buscar y mantener con increíble facilidad. Tratar las naming conventions como opcionales destruye la productividad del equipo.</div>
+      </div>
+      <div class="intro-card">
+        <span class="card-icon">🏠</span>
+        <div class="card-title">Todo dentro del namespace</div>
+        <div class="card-desc">Ningún asset fuera de <code style="font-family:monospace;font-size:12px;background:rgba(255,255,255,.08);padding:2px 6px;border-radius:4px">Content/NombreProyecto/</code>. La raíz del Content Browser es para ThirdParty y Engine, jamás para tu proyecto.</div>
+      </div>
+      <div class="intro-card">
+        <span class="card-icon">🚫</span>
+        <div class="card-title">Sin espacios, jamás</div>
+        <div class="card-desc">Los espacios en nombres de assets y carpetas rompen herramientas de ingeniería, scripts de batch y procesos de build. Usa PascalCase sin excepción.</div>
+      </div>
+      <div class="intro-card">
+        <span class="card-icon">📂</span>
+        <div class="card-title">Maps en su carpeta</div>
+        <div class="card-desc">Todos los levels deben vivir dentro de <code style="font-family:monospace;font-size:12px;background:rgba(255,255,255,.08);padding:2px 6px;border-radius:4px">Maps/</code>. Esto simplifica el cooking, lighting builds y procesos de QA enormemente.</div>
+      </div>
+      <div class="intro-card">
+        <span class="card-icon">🔒</span>
+        <div class="card-title">Respeta Core</div>
+        <div class="card-desc">La carpeta <code style="font-family:monospace;font-size:12px;background:rgba(255,255,255,.08);padding:2px 6px;border-radius:4px">Core/</code> envía un mensaje claro: no tocar. Haz tus cambios en clases hijas, no en los assets base.</div>
+      </div>
+      <div class="intro-card">
+        <span class="card-icon">🧹</span>
+        <div class="card-title">Consistencia total</div>
+        <div class="card-desc">Todo el proyecto debe parecer creado por una sola persona, sin importar cuántos contribuyeron. La consistencia reduce el tiempo de onboarding de nuevos miembros.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn" style="margin-top:16px">
+      <span class="callout-icon">🔥</span>
+      <div class="callout-body">
+        <strong>Nunca muevas assets después de haberlos referenciado.</strong> Mover assets genera redirectors en cadena que pueden romper referencias en todo el proyecto. Organiza bien desde el día uno — el costo de reorganizar después es enorme.
+      </div>
+    </div>
+
+    <h3>Referencia rápida — Cheat Sheet</h3>
+    <div class="diagram-container">
+      <div class="diagram-title">Mapa de Prefijos — Referencia Rápida</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+        <div style="background:rgba(79,142,255,.08);border:1px solid rgba(79,142,255,.25);border-radius:12px;padding:16px">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent);margin-bottom:8px">BP_</div>
+          <div style="font-size:13px;color:var(--text-muted)">Blueprint (actor, componente, gamemode)</div>
+        </div>
+        <div style="background:rgba(0,229,195,.07);border:1px solid rgba(0,229,195,.2);border-radius:12px;padding:16px">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent3);margin-bottom:8px">SM_</div>
+          <div style="font-size:13px;color:var(--text-muted)">Static Mesh — objeto sin animación</div>
+        </div>
+        <div style="background:rgba(0,229,195,.07);border:1px solid rgba(0,229,195,.2);border-radius:12px;padding:16px">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent3);margin-bottom:8px">SK_</div>
+          <div style="font-size:13px;color:var(--text-muted)">Skeletal Mesh — objeto con esqueleto</div>
+        </div>
+        <div style="background:rgba(124,92,252,.08);border:1px solid rgba(124,92,252,.25);border-radius:12px;padding:16px">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent2);margin-bottom:8px">M_</div>
+          <div style="font-size:13px;color:var(--text-muted)">Material — shader principal</div>
+        </div>
+        <div style="background:rgba(124,92,252,.08);border:1px solid rgba(124,92,252,.25);border-radius:12px;padding:16px">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent2);margin-bottom:8px">MI_</div>
+          <div style="font-size:13px;color:var(--text-muted)">Material Instance — variante eficiente</div>
+        </div>
+        <div style="background:rgba(255,107,53,.08);border:1px solid rgba(255,107,53,.25);border-radius:12px;padding:16px">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--warn);margin-bottom:8px">T_</div>
+          <div style="font-size:13px;color:var(--text-muted)">Texture — con sufijo de canal (_D, _N...)</div>
+        </div>
+        <div style="background:rgba(45,222,152,.07);border:1px solid rgba(45,222,152,.2);border-radius:12px;padding:16px">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--green);margin-bottom:8px">ABP_</div>
+          <div style="font-size:13px;color:var(--text-muted)">Animation Blueprint</div>
+        </div>
+        <div style="background:rgba(45,222,152,.07);border:1px solid rgba(45,222,152,.2);border-radius:12px;padding:16px">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--green);margin-bottom:8px">A_</div>
+          <div style="font-size:13px;color:var(--text-muted)">Animation Sequence / Sound Wave</div>
+        </div>
+        <div style="background:rgba(255,209,102,.07);border:1px solid rgba(255,209,102,.2);border-radius:12px;padding:16px">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--yellow);margin-bottom:8px">NS_</div>
+          <div style="font-size:13px;color:var(--text-muted)">Niagara System — VFX (UE5)</div>
+        </div>
+        <div style="background:rgba(79,142,255,.08);border:1px solid rgba(79,142,255,.25);border-radius:12px;padding:16px">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent);margin-bottom:8px">WBP_</div>
+          <div style="font-size:13px;color:var(--text-muted)">Widget Blueprint — UI / HUD</div>
+        </div>
+        <div style="background:rgba(0,229,195,.07);border:1px solid rgba(0,229,195,.2);border-radius:12px;padding:16px">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent3);margin-bottom:8px">BT_</div>
+          <div style="font-size:13px;color:var(--text-muted)">Behavior Tree — IA</div>
+        </div>
+        <div style="background:rgba(124,92,252,.08);border:1px solid rgba(124,92,252,.25);border-radius:12px;padding:16px">
+          <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent2);margin-bottom:8px">DT_</div>
+          <div style="font-size:13px;color:var(--text-muted)">Data Table — balance, stats</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- AUTHOR -->
+<div class="author-section">
+  <div class="author-glow"></div>
+  <div class="author-label">Desarrollado por</div>
+  <div class="author-name">Christian Mendez</div>
+  <div class="author-divider"></div>
+  <div class="author-credit">Guía Docente · Unreal Engine 5 · Naming Conventions & Folder Structure</div>
+  <div class="author-ref">
+    Basado en <a href="https://github.com/Allar/ue5-style-guide" target="_blank">Allar/ue5-style-guide</a> — la guía de estilo de referencia de la comunidad UE5
+  </div>
+</div>
+
+</body>
+</html>
