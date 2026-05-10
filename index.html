@@ -3,1505 +3,1659 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UE5 — Naming Conventions & Folder Structure</title>
+<title>UE5 — Naming Conventions & Estructura de Carpetas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-/* ══════════════════════════════════════════════
-   RESET
-══════════════════════════════════════════════ */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;font-size:16px}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-/* ══════════════════════════════════════════════
-   DESIGN TOKENS
-══════════════════════════════════════════════ */
-:root{
-  /* Palette */
+:root {
+  /* Colors */
   --bg:        #080b10;
-  --surface:   #0e1219;
-  --surface2:  #141921;
+  --surface:   #0f1318;
+  --surface2:  #141920;
   --surface3:  #1a2030;
-  --border:    #1e2a3c;
+  --border:    #1e2738;
   --border2:   #253045;
-  --accent:    #4a8fff;
+  --accent:    #4f8eff;
   --accent2:   #8b6fff;
-  --accent3:   #00cfa8;
-  --warn:      #ff6b35;
+  --accent3:   #00d9b8;
+  --yellow:    #ffd166;
   --green:     #2dde98;
   --red:       #ff4d6d;
-  --yellow:    #ffd166;
-  --text:      #dce4f2;
-  --muted:     #6a7a94;
-  --dim:       #384255;
-  --code-bg:   #05080d;
+  --text:      #dde4f0;
+  --soft:      #8fa3c0;
+  --muted:     #4f6180;
+  --code-bg:   #050810;
+  --nav-w:     268px;
 
-  /* Layout */
-  --sidebar-w: 272px;
-  --topbar-h:  62px;
-  --content-max: 880px;
-  --r:  14px;
-  --rs: 8px;
+  /* Quicksand type scale */
+  --font-ui:   'Quicksand', sans-serif;
+  --font-mono: 'Space Mono', monospace;
 
-  /* Typography — Quicksand */
-  --font-main:  'Quicksand', system-ui, sans-serif;
-  --font-mono:  'Space Mono', 'Courier New', monospace;
+  --text-xs:   13px;
+  --text-sm:   15px;
+  --text-base: 17px;
+  --text-md:   20px;
+  --text-lg:   24px;
+  --text-xl:   28px;
+  --text-2xl:  36px;
+  --text-3xl:  46px;
+  --text-hero: clamp(44px, 5.5vw, 68px);
 
-  /* Type scale */
-  --text-xs:   11px;
-  --text-sm:   13px;
-  --text-base: 16px;
-  --text-md:   18px;
-  --text-lg:   20px;
-  --text-xl:   24px;
-  --text-2xl:  30px;
-  --text-3xl:  38px;
-  --text-hero: clamp(38px, 5.5vw, 64px);
-}
+  --leading-tight:   1.15;
+  --leading-snug:    1.35;
+  --leading-normal:  1.65;
+  --leading-relaxed: 1.8;
 
-/* ══════════════════════════════════════════════
-   BASE
-══════════════════════════════════════════════ */
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:var(--font-main);
-  font-size:var(--text-base);
-  font-weight:400;
-  line-height:1.75;
-  overflow-x:hidden;
-  min-height:100vh;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+  --tracking-tight:  -0.5px;
+  --tracking-normal:  0px;
+  --tracking-wide:    0.5px;
+  --tracking-wider:   1.2px;
+  --tracking-widest:  2.5px;
 }
 
-/* ══════════════════════════════════════════════
-   TOPBAR (mobile)
-══════════════════════════════════════════════ */
-.topbar{
-  display:none;
-  position:fixed;top:0;left:0;right:0;
-  height:var(--topbar-h);
-  background:rgba(8,11,16,.96);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-  z-index:200;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 22px;
-}
-.topbar-logo{
-  font-family:var(--font-main);
-  font-size:var(--text-sm);
-  font-weight:700;
-  color:var(--accent);
-  letter-spacing:2.5px;
-  text-transform:uppercase;
-}
-.topbar-toggle{
-  background:none;
-  border:1px solid var(--border2);
-  color:var(--text);
-  border-radius:var(--rs);
-  padding:6px 11px;
-  cursor:pointer;
-  font-size:19px;
-  line-height:1;
+/* ── BASE ── */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  display: flex;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ══════════════════════════════════════════════
-   LAYOUT
-══════════════════════════════════════════════ */
-.layout{display:flex;min-height:100vh}
+h1, h2, h3, h4, h5 { font-family: var(--font-ui); font-weight: 700; color: #fff; }
+h1 { font-size: var(--text-hero);  line-height: var(--leading-tight);   letter-spacing: var(--tracking-tight); }
+h2 { font-size: var(--text-2xl);   line-height: var(--leading-tight);   letter-spacing: var(--tracking-tight); }
+h3 { font-size: var(--text-lg);    line-height: var(--leading-snug);    letter-spacing: var(--tracking-normal); }
+h4 { font-size: var(--text-md);    line-height: var(--leading-snug);    letter-spacing: var(--tracking-normal); font-weight: 600; }
+p  { font-family: var(--font-ui);  font-size: var(--text-base); line-height: var(--leading-relaxed); color: var(--soft); }
+a  { color: var(--accent); text-decoration: none; }
 
-/* ══════════════════════════════════════════════
-   SIDEBAR
-══════════════════════════════════════════════ */
-.sidebar{
-  position:fixed;top:0;left:0;bottom:0;
-  width:var(--sidebar-w);
-  background:var(--surface);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  z-index:100;
-  overflow-y:auto;overflow-x:hidden;
-}
-.sidebar::-webkit-scrollbar{width:4px}
-.sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-
-.sidebar-brand{
-  padding:30px 26px 24px;
-  border-bottom:1px solid var(--border);
-  flex-shrink:0;
-}
-.brand-tag{
-  font-family:var(--font-main);
-  font-size:var(--text-xs);
-  font-weight:600;
-  letter-spacing:3px;
-  color:var(--accent3);
-  text-transform:uppercase;
-  margin-bottom:8px;
-}
-.brand-title{
-  font-family:var(--font-main);
-  font-size:17px;
-  font-weight:700;
-  line-height:1.25;
-  letter-spacing:-.1px;
-  color:var(--text);
-}
-.brand-title em{
-  font-style:normal;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-.brand-sub{
-  font-size:var(--text-xs);
-  font-weight:500;
-  color:var(--muted);
-  margin-top:6px;
-  line-height:1.5;
-  letter-spacing:.2px;
+code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: rgba(79,142,255,0.1);
+  color: var(--accent);
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(79,142,255,0.18);
 }
 
-.sidebar-nav{padding:22px 16px;flex:1}
-.nav-group{margin-bottom:28px}
-.nav-group-label{
-  font-family:var(--font-main);
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:2.5px;
-  color:var(--dim);
-  text-transform:uppercase;
-  padding:0 10px;
-  margin-bottom:8px;
-}
-.nav-item{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 12px;
-  border-radius:var(--rs);
-  color:var(--muted);
-  text-decoration:none;
-  font-family:var(--font-main);
-  font-size:14px;
-  font-weight:600;
-  transition:background .15s,color .15s;
-  cursor:pointer;
-  line-height:1.3;
-}
-.nav-item:hover{background:var(--surface2);color:var(--text)}
-.nav-item.active{background:rgba(74,143,255,.1);color:var(--accent)}
-.nav-item-num{
-  font-family:var(--font-mono);
-  font-size:10px;
-  color:var(--dim);
-  width:20px;
-  flex-shrink:0;
+/* ── SIDEBAR NAV ── */
+nav {
+  width: var(--nav-w);
+  min-height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  position: fixed;
+  top: 0; left: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow-y: auto;
 }
 
-.sidebar-footer{
-  padding:18px 26px;
-  border-top:1px solid var(--border);
-  flex-shrink:0;
-}
-.sidebar-footer p{
-  font-family:var(--font-main);
-  font-size:12px;
-  font-weight:500;
-  color:var(--dim);
-  line-height:1.6;
-  margin-bottom:0;
-}
-.sidebar-footer strong{color:var(--muted);font-weight:700}
-
-/* ══════════════════════════════════════════════
-   MAIN CONTENT
-══════════════════════════════════════════════ */
-.main{margin-left:var(--sidebar-w);flex:1;min-width:0}
-.main-inner{max-width:var(--content-max);margin:0 auto;padding:76px 60px 128px}
-
-/* ══════════════════════════════════════════════
-   HERO
-══════════════════════════════════════════════ */
-.hero{margin-bottom:88px;position:relative}
-.hero::after{
-  content:'';position:absolute;
-  top:-80px;right:-140px;
-  width:540px;height:540px;
-  background:radial-gradient(ellipse,rgba(74,143,255,.05) 0%,transparent 68%);
-  pointer-events:none;
+.nav-brand {
+  padding: 28px 22px 20px;
+  border-bottom: 1px solid var(--border);
 }
 
-.eyebrow{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  font-family:var(--font-main);
-  font-size:var(--text-xs);
-  font-weight:700;
-  letter-spacing:3.5px;
-  color:var(--accent3);
-  text-transform:uppercase;
-  margin-bottom:24px;
-}
-.eyebrow::before{
-  content:'';
-  width:36px;height:1px;
-  background:var(--accent3);
-  flex-shrink:0;
+.nav-brand .engine-tag {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.85;
+  display: block;
+  margin-bottom: 8px;
 }
 
-.hero h1{
-  font-family:var(--font-main);
-  font-size:var(--text-hero);
-  font-weight:700;
-  line-height:1.08;
-  letter-spacing:-.5px;
-  margin-bottom:24px;
-  color:var(--text);
-}
-.hero h1 em{
-  font-style:normal;
-  background:linear-gradient(135deg,var(--accent) 20%,var(--accent2) 80%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
+.nav-brand h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-normal);
 }
 
-.hero-desc{
-  font-family:var(--font-main);
-  font-size:var(--text-md);
-  font-weight:400;
-  color:var(--muted);
-  max-width:580px;
-  line-height:1.7;
-  margin-bottom:38px;
+.nav-brand h2 span { color: var(--accent2); }
+
+.nav-group-label {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 18px 22px 5px;
+  opacity: 0.5;
 }
 
-.badge-row{display:flex;flex-wrap:wrap;gap:10px}
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  padding:7px 16px;
-  border-radius:100px;
-  font-family:var(--font-main);
-  font-size:var(--text-sm);
-  font-weight:700;
-  letter-spacing:.4px;
-  border:1px solid;
-}
-.badge-blue  {background:rgba(74,143,255,.09); border-color:rgba(74,143,255,.26); color:var(--accent)}
-.badge-purple{background:rgba(139,111,255,.09);border-color:rgba(139,111,255,.26);color:var(--accent2)}
-.badge-teal  {background:rgba(0,207,168,.09);  border-color:rgba(0,207,168,.26);  color:var(--accent3)}
-
-/* ══════════════════════════════════════════════
-   SECTION STRUCTURE
-══════════════════════════════════════════════ */
-.section{margin-bottom:96px;scroll-margin-top:36px}
-
-.section-head{
-  display:flex;
-  align-items:baseline;
-  gap:18px;
-  padding-bottom:20px;
-  border-bottom:1px solid var(--border);
-  margin-bottom:44px;
-}
-.sec-num{
-  font-family:var(--font-mono);
-  font-size:var(--text-xs);
-  color:var(--dim);
-  letter-spacing:2px;
-  flex-shrink:0;
-  padding-bottom:2px;
-}
-.sec-title{
-  font-family:var(--font-main);
-  font-size:clamp(26px, 3vw, 38px);
-  font-weight:700;
-  letter-spacing:-.3px;
-  line-height:1.1;
-  color:var(--text);
+nav ul { list-style: none; padding: 12px 0 60px; }
+nav ul li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all 0.18s;
+  line-height: var(--leading-snug);
 }
 
-/* ══════════════════════════════════════════════
-   TYPOGRAPHY SYSTEM
-══════════════════════════════════════════════ */
+nav ul li a:hover { color: var(--text); background: rgba(255,255,255,0.03); border-left-color: var(--border2); }
+nav ul li a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(79,142,255,0.06); font-weight: 600; }
 
-/* Lead paragraph */
-.lead{
-  font-family:var(--font-main);
-  font-size:17px;
-  font-weight:400;
-  color:var(--muted);
-  line-height:1.8;
-  margin-bottom:36px;
-  max-width:740px;
+nav ul li a .n {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  opacity: 0.5;
+  min-width: 22px;
 }
 
-/* Body text */
-p{
-  font-family:var(--font-main);
-  font-size:15.5px;
-  font-weight:400;
-  color:var(--muted);
-  margin-bottom:16px;
-  line-height:1.75;
+nav ul li a.active .n { opacity: 1; color: var(--accent); }
+
+/* ── MAIN ── */
+main {
+  margin-left: var(--nav-w);
+  flex: 1;
+  max-width: calc(100% - var(--nav-w));
 }
 
-/* H3 sub-headings */
-h3{
-  font-family:var(--font-main);
-  font-size:var(--text-xl);
-  font-weight:700;
-  letter-spacing:-.2px;
-  margin:48px 0 18px;
-  color:var(--text);
-  line-height:1.2;
+/* ── HERO ── */
+.hero {
+  padding: 80px 72px 64px;
+  background: linear-gradient(135deg, #080b10 0%, #0c1020 55%, #080c15 100%);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Inline code chip */
-.chip{
-  font-family:var(--font-mono);
-  font-size:.8em;
-  background:rgba(74,143,255,.1);
-  color:var(--accent);
-  padding:2px 8px;
-  border-radius:5px;
-  border:1px solid rgba(74,143,255,.2);
-  white-space:nowrap;
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -80px;
+  width: 560px; height: 560px;
+  background: radial-gradient(circle, rgba(79,142,255,0.07) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-/* ══════════════════════════════════════════════
-   CALLOUTS
-══════════════════════════════════════════════ */
-.callout{
-  display:flex;
-  gap:14px;
-  padding:18px 22px;
-  border-radius:var(--r);
-  margin:26px 0;
-  border-left:3px solid;
-}
-.callout-info {background:rgba(74,143,255,.055);border-color:var(--accent)}
-.callout-warn {background:rgba(255,107,53,.055);border-color:var(--warn)}
-.callout-tip  {background:rgba(0,207,168,.055); border-color:var(--accent3)}
-
-.callout-icon{font-size:18px;flex-shrink:0;margin-top:2px}
-.callout-body{
-  font-family:var(--font-main);
-  font-size:14.5px;
-  font-weight:400;
-  color:var(--muted);
-  line-height:1.7;
-}
-.callout-body strong{color:var(--text);font-weight:700}
-.callout-body em{font-style:italic;color:var(--text)}
-.callout-body code{
-  font-family:var(--font-mono);
-  font-size:12px;
-  background:rgba(255,255,255,.06);
-  padding:1px 6px;
-  border-radius:4px;
-  color:var(--text);
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: 240px;
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(139,111,255,0.07) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-/* ══════════════════════════════════════════════
-   CARDS
-══════════════════════════════════════════════ */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
-  gap:16px;
-  margin-bottom:38px;
-}
-.card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  padding:26px 22px;
-  position:relative;
-  overflow:hidden;
-  transition:border-color .2s,transform .22s;
-}
-.card:hover{border-color:rgba(74,143,255,.5);transform:translateY(-2px)}
-.card::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  opacity:0;transition:opacity .2s;
-}
-.card:hover::after{opacity:1}
-.card-icon{font-size:28px;margin-bottom:14px;display:block}
-.card-title{
-  font-family:var(--font-main);
-  font-size:15px;
-  font-weight:700;
-  margin-bottom:9px;
-  color:var(--text);
-}
-.card-desc{
-  font-family:var(--font-main);
-  font-size:13.5px;
-  font-weight:400;
-  color:var(--muted);
-  line-height:1.6;
+.hero-tags {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
 }
 
-/* ══════════════════════════════════════════════
-   FORMULA BOX
-══════════════════════════════════════════════ */
-.formula-box{
-  background:var(--code-bg);
-  border:1px solid var(--border2);
-  border-radius:var(--r);
-  padding:44px 38px 38px;
-  margin-bottom:44px;
-  position:relative;
-}
-.formula-box::before{
-  content:'FÓRMULA BASE';
-  position:absolute;top:14px;left:24px;
-  font-family:var(--font-main);
-  font-size:9px;font-weight:700;
-  letter-spacing:3px;color:var(--dim);
-  text-transform:uppercase;
-}
-.formula{
-  display:flex;align-items:center;justify-content:center;
-  flex-wrap:wrap;gap:10px;
-  font-family:var(--font-mono);
-  font-size:clamp(13px,1.9vw,19px);
-  margin-bottom:38px;
-}
-.fp{padding:10px 18px;border-radius:10px;font-weight:700;border:1px solid}
-.fp-pre{background:rgba(74,143,255,.14); border-color:rgba(74,143,255,.32); color:var(--accent)}
-.fp-bas{background:rgba(0,207,168,.11);  border-color:rgba(0,207,168,.28);  color:var(--accent3)}
-.fp-var{background:rgba(139,111,255,.11);border-color:rgba(139,111,255,.28);color:var(--accent2)}
-.fp-suf{background:rgba(255,107,53,.11); border-color:rgba(255,107,53,.28); color:var(--warn)}
-.fp-sep{color:var(--dim);font-size:18px}
-
-.formula-meta{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(178px,1fr));
-  gap:12px;
-}
-.fm-item{
-  padding:14px 16px;
-  border-radius:var(--rs);
-  background:rgba(255,255,255,.022);
-}
-.fm-label{
-  font-family:var(--font-main);
-  font-size:9.5px;font-weight:700;
-  letter-spacing:2.5px;text-transform:uppercase;
-  margin-bottom:6px;
-}
-.fm-label.blue  {color:var(--accent)}
-.fm-label.teal  {color:var(--accent3)}
-.fm-label.purple{color:var(--accent2)}
-.fm-label.orange{color:var(--warn)}
-.fm-desc{
-  font-family:var(--font-main);
-  font-size:13px;font-weight:400;
-  color:var(--muted);line-height:1.55;
+.htag {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 3px;
+  border: 1px solid;
 }
 
-/* ══════════════════════════════════════════════
-   PILLS
-══════════════════════════════════════════════ */
-.pill-row{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 34px}
-.pill{
-  display:inline-flex;align-items:center;
-  border-radius:var(--rs);overflow:hidden;
-  font-family:var(--font-mono);font-size:13px;
-  border:1px solid var(--border2);
-}
-.pill span{padding:6px 10px}
-.pill-pre{background:rgba(74,143,255,.17); color:var(--accent)}
-.pill-bas{background:rgba(0,207,168,.09);  color:var(--accent3)}
-.pill-var{background:rgba(139,111,255,.09);color:var(--accent2)}
-.pill-suf{background:rgba(255,107,53,.09); color:var(--warn)}
+.htag-blue  { color: var(--accent);  border-color: rgba(79,142,255,0.35);  background: rgba(79,142,255,0.07); }
+.htag-purple{ color: var(--accent2); border-color: rgba(139,111,255,0.35); background: rgba(139,111,255,0.07); }
+.htag-teal  { color: var(--accent3); border-color: rgba(0,217,184,0.35);   background: rgba(0,217,184,0.07); }
 
-/* ══════════════════════════════════════════════
-   TABLE
-══════════════════════════════════════════════ */
-.table-wrap{
-  width:100%;overflow-x:auto;
-  border-radius:var(--r);border:1px solid var(--border);
-  margin-bottom:38px;-webkit-overflow-scrolling:touch;
-}
-table{
-  width:100%;min-width:620px;
-  border-collapse:collapse;
-  background:var(--surface);
-}
-thead th{
-  background:var(--surface2);
-  padding:14px 20px;text-align:left;
-  font-family:var(--font-main);
-  font-size:10.5px;font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;
-  color:var(--muted);
-  border-bottom:1px solid var(--border);white-space:nowrap;
-}
-tbody td{
-  font-family:var(--font-main);
-  padding:13px 20px;
-  border-bottom:1px solid rgba(255,255,255,.032);
-  vertical-align:middle;font-size:14.5px;
-}
-tbody tr:last-child td{border-bottom:none}
-tbody tr:hover td{background:rgba(255,255,255,.016)}
+.hero h1 { color: #fff; margin-bottom: 20px; }
+.hero h1 .hi { color: var(--accent); }
+.hero h1 .hi2 { color: var(--accent2); }
 
-.cat-row td{
-  background:var(--surface2);
-  color:var(--accent3);
-  font-family:var(--font-main);
-  font-size:9.5px;font-weight:700;
-  letter-spacing:2.5px;text-transform:uppercase;
-  padding:9px 20px;
-  border-bottom:1px solid var(--border);
-}
-.td-pre{font-family:var(--font-mono);font-size:14px;font-weight:700;white-space:nowrap}
-.td-suf{font-family:var(--font-mono);font-size:12.5px;color:var(--warn);white-space:nowrap}
-.td-ex {font-family:var(--font-mono);font-size:12px;color:var(--muted);white-space:nowrap}
-.td-type{font-weight:600;white-space:nowrap;color:var(--text)}
-.td-desc{color:var(--muted);font-size:13.5px;font-weight:400}
-
-.c-blue  {color:var(--accent)}
-.c-teal  {color:var(--accent3)}
-.c-purple{color:var(--accent2)}
-.c-orange{color:var(--warn)}
-.c-green {color:var(--green)}
-.c-yellow{color:var(--yellow)}
-.c-none  {color:var(--dim)}
-
-/* ══════════════════════════════════════════════
-   TEXTURE SUFFIX GRID
-══════════════════════════════════════════════ */
-.suffix-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(185px,1fr));
-  gap:10px;margin:22px 0;
-}
-.suf-card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--rs);padding:13px 16px;
-  display:flex;align-items:center;gap:12px;
-}
-.suf-tag{
-  font-family:var(--font-mono);font-size:14px;font-weight:700;
-  color:var(--warn);background:rgba(255,107,53,.09);
-  padding:5px 10px;border-radius:6px;
-  flex-shrink:0;min-width:44px;text-align:center;
-}
-.suf-name{
-  font-family:var(--font-main);
-  font-size:13.5px;font-weight:500;
-  color:var(--muted);line-height:1.35;
+.hero-lead {
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  font-weight: 400;
+  color: var(--soft);
+  line-height: var(--leading-relaxed);
+  max-width: 660px;
+  margin-bottom: 36px;
 }
 
-/* ══════════════════════════════════════════════
-   COMPARE COLUMNS
-══════════════════════════════════════════════ */
-.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0}
-.cmp-col{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r);padding:26px;
-}
-.cmp-col.good{border-top:3px solid var(--green)}
-.cmp-col.bad {border-top:3px solid var(--red)}
-.cmp-title{
-  font-family:var(--font-main);
-  font-size:10.5px;font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;
-}
-.good .cmp-title{color:var(--green)}
-.bad  .cmp-title{color:var(--red)}
-.cmp-item{
-  display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;
-  font-family:var(--font-main);font-size:14px;font-weight:400;
-  color:var(--muted);line-height:1.55;
-}
-.cmp-item code{
-  font-family:var(--font-mono);font-size:11.5px;
-  background:rgba(255,255,255,.05);padding:1px 6px;
-  border-radius:4px;color:var(--text);
+.hero-stats { display: flex; gap: 36px; flex-wrap: wrap; }
+
+.hstat { display: flex; flex-direction: column; gap: 4px; }
+
+.hstat-num {
+  font-family: var(--font-ui);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
 }
 
-/* ══════════════════════════════════════════════
-   TREE / CODE
-══════════════════════════════════════════════ */
-.tree-wrap{
-  background:var(--code-bg);border:1px solid var(--border);
-  border-radius:var(--r);padding:34px 38px;margin:24px 0;
-  overflow-x:auto;-webkit-overflow-scrolling:touch;
-}
-.tree-wrap pre{
-  font-family:var(--font-mono);font-size:13.5px;
-  line-height:1.95;white-space:pre;
+.hstat-label {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-/* ══════════════════════════════════════════════
-   BROWSER MOCKUP
-══════════════════════════════════════════════ */
-.browser{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r);overflow:hidden;margin-bottom:38px;
-}
-.browser-bar{
-  background:var(--surface2);border-bottom:1px solid var(--border);
-  padding:13px 20px;display:flex;align-items:center;gap:14px;
-}
-.dots{display:flex;gap:6px}
-.dot{width:11px;height:11px;border-radius:50%}
-.dot-r{background:#ff5f56}.dot-y{background:#ffbd2e}.dot-g{background:#27c93f}
-.browser-label{
-  font-family:var(--font-mono);font-size:11.5px;color:var(--muted);
-}
-.browser-body{padding:28px}
-
-.asset-group{margin-bottom:36px}
-.ag-title{
-  font-family:var(--font-main);
-  font-size:10px;font-weight:700;
-  letter-spacing:2.5px;text-transform:uppercase;
-  color:var(--dim);margin-bottom:12px;
-  padding-bottom:8px;border-bottom:1px solid var(--border);
-}
-.asset-list{display:flex;flex-direction:column;gap:7px}
-.asset-row{
-  display:grid;
-  grid-template-columns:240px 1fr auto;
-  align-items:center;gap:16px;
-  padding:11px 16px;
-  background:var(--code-bg);border-radius:var(--rs);
-  border:1px solid rgba(255,255,255,.032);transition:border-color .2s;
-}
-.asset-row:hover{border-color:var(--border2)}
-.asset-name{
-  font-family:var(--font-mono);font-size:13.5px;font-weight:700;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.asset-path{
-  font-family:var(--font-mono);font-size:11.5px;color:var(--dim);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.asset-desc{
-  font-family:var(--font-main);font-size:13px;font-weight:500;
-  color:var(--muted);text-align:right;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+/* ── SECTIONS ── */
+section {
+  padding: 60px 72px;
+  border-bottom: 1px solid var(--border);
 }
 
-/* ══════════════════════════════════════════════
-   CHEAT SHEET
-══════════════════════════════════════════════ */
-.cheat-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(196px,1fr));
-  gap:12px;margin:28px 0;
-}
-.cheat-card{border-radius:var(--rs);padding:17px 16px;border:1px solid}
-.cheat-prefix{
-  font-family:var(--font-mono);font-size:20px;font-weight:700;margin-bottom:8px;
-}
-.cheat-desc{
-  font-family:var(--font-main);font-size:13px;font-weight:500;
-  color:var(--muted);line-height:1.5;
+section:last-child { border-bottom: none; }
+
+.sec-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 36px;
 }
 
-/* ══════════════════════════════════════════════
-   AUTHOR / FOOTER — Academic Identity
-══════════════════════════════════════════════ */
-.author-section{
-  position:relative;
-  border-top:1px solid var(--border);
-  overflow:hidden;
+.sec-num {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+  color: var(--accent);
+  background: rgba(79,142,255,0.08);
+  border: 1px solid rgba(79,142,255,0.22);
+  padding: 6px 13px;
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-top: 5px;
 }
 
-/* Top gradient band */
-.author-section::before{
-  content:'';
-  position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse at 30% 0%, rgba(74,143,255,.06) 0%, transparent 60%),
-    radial-gradient(ellipse at 70% 100%, rgba(139,111,255,.06) 0%, transparent 60%);
-  pointer-events:none;
+.sec-title h2 { color: #fff; }
+.sec-title p  { font-size: var(--text-base); color: var(--muted); margin-top: 5px; }
+
+/* ── INTRO CARDS ── */
+.card-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 8px;
 }
 
-/* Decorative top rule */
-.author-rule{
-  width:100%;
-  height:3px;
-  background:linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
-  opacity:.6;
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px;
+  transition: border-color 0.18s, background 0.18s;
 }
 
-.author-inner{
-  position:relative;
-  max-width:var(--content-max);
-  margin:0 auto;
-  padding:72px 60px 80px;
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:48px;
-  align-items:start;
+.card:hover { border-color: var(--border2); background: var(--surface2); }
+
+.card-icon { font-size: 22px; margin-bottom: 12px; }
+
+.card h4 {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: var(--tracking-normal);
 }
 
-/* Left: name + credentials */
-.author-left{}
-
-.author-role-tag{
-  font-family:var(--font-main);
-  font-size:10px;font-weight:700;
-  letter-spacing:3.5px;text-transform:uppercase;
-  color:var(--accent3);
-  margin-bottom:16px;
-  display:flex;align-items:center;gap:10px;
-}
-.author-role-tag::before{
-  content:'';width:28px;height:1px;background:var(--accent3);flex-shrink:0;
+.card p {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--soft);
+  line-height: var(--leading-relaxed);
 }
 
-.author-name{
-  font-family:var(--font-main);
-  font-size:clamp(28px,3.8vw,48px);
-  font-weight:700;
-  letter-spacing:-.3px;
-  line-height:1.1;
-  color:var(--text);
-  margin-bottom:16px;
+/* ── PREFIX TABLE ── */
+.prefix-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 8px 0 24px;
 }
 
-.author-credentials{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  margin-bottom:28px;
-}
-.author-cred-item{
-  font-family:var(--font-main);
-  font-size:14px;font-weight:600;
-  color:var(--muted);
-  display:flex;align-items:center;gap:10px;
-  letter-spacing:.1px;
-}
-.author-cred-item::before{
-  content:'';
-  width:5px;height:5px;border-radius:50%;
-  background:var(--accent);flex-shrink:0;
-}
-.author-cred-item.highlight{
-  color:var(--accent);font-weight:700;
-}
-.author-cred-item.highlight::before{background:var(--accent)}
-
-.author-divider{
-  width:48px;height:2px;
-  background:linear-gradient(90deg,var(--accent),var(--accent3));
-  border-radius:2px;margin:24px 0;
+.prefix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-base);
 }
 
-.author-institution{
-  display:flex;flex-direction:column;gap:4px;
-}
-.author-degree{
-  font-family:var(--font-main);
-  font-size:14px;font-weight:500;
-  color:var(--muted);line-height:1.5;
-}
-.author-school{
-  font-family:var(--font-main);
-  font-size:15px;font-weight:700;
-  color:var(--text);letter-spacing:-.1px;
-}
-.author-university{
-  font-family:var(--font-main);
-  font-size:13px;font-weight:600;
-  color:var(--accent2);letter-spacing:.2px;
+.prefix-table thead th {
+  background: var(--surface2);
+  padding: 13px 18px;
+  text-align: left;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
 }
 
-/* Right: reference */
-.author-right{
-  text-align:right;
-  padding-top:8px;
-}
-.author-ref-label{
-  font-family:var(--font-main);
-  font-size:9.5px;font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;
-  color:var(--dim);margin-bottom:8px;
-}
-.author-ref-link{
-  display:block;
-  font-family:var(--font-main);
-  font-size:12.5px;font-weight:600;
-  color:var(--accent);
-  text-decoration:none;opacity:.7;
-  transition:opacity .2s;
-  margin-bottom:4px;
-}
-.author-ref-link:hover{opacity:1}
-.author-ref-sub{
-  font-family:var(--font-main);
-  font-size:11px;font-weight:400;color:var(--dim);
-  line-height:1.5;
+.prefix-table tbody td {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  font-weight: 400;
+  color: var(--soft);
+  vertical-align: middle;
+  line-height: var(--leading-normal);
 }
 
-/* ══════════════════════════════════════════════
-   SCROLLBAR
-══════════════════════════════════════════════ */
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(--dim)}
+.prefix-table tbody tr:last-child td { border-bottom: none; }
+.prefix-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
 
-/* ══════════════════════════════════════════════
-   RESPONSIVE — 1100px
-══════════════════════════════════════════════ */
-@media(max-width:1100px){
-  :root{--sidebar-w:240px}
-  .main-inner{padding:56px 44px 108px}
-  .author-inner{padding:60px 44px 68px}
+.prefix-table td.mono {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap;
 }
 
-/* ══════════════════════════════════════════════
-   RESPONSIVE — 900px
-══════════════════════════════════════════════ */
-@media(max-width:900px){
-  :root{--sidebar-w:228px}
-  .main-inner{padding:48px 34px 88px}
-  .author-inner{
-    grid-template-columns:1fr;
-    gap:28px;
-    padding:52px 34px 60px;
-  }
-  .author-right{text-align:left}
-  .asset-row{grid-template-columns:200px 1fr}
-  .asset-desc{display:none}
+.prefix-table td.cat {
+  font-weight: 600;
+  color: var(--text);
 }
 
-/* ══════════════════════════════════════════════
-   RESPONSIVE — 768px (MOBILE)
-══════════════════════════════════════════════ */
-@media(max-width:768px){
-  :root{--sidebar-w:268px}
-  .topbar{display:flex}
-  .sidebar{
-    transform:translateX(-100%);
-    transition:transform .28s cubic-bezier(.4,0,.2,1);
-    box-shadow:4px 0 32px rgba(0,0,0,.5);
-  }
-  .sidebar.open{transform:translateX(0)}
-  .sidebar-overlay{
-    display:none;position:fixed;inset:0;
-    background:rgba(0,0,0,.55);z-index:99;
-  }
-  .sidebar-overlay.open{display:block}
-  .main{margin-left:0;padding-top:var(--topbar-h)}
-  .main-inner{padding:36px 22px 80px}
-  .author-inner{padding:44px 22px 52px}
-  .compare{grid-template-columns:1fr}
-  .asset-row{grid-template-columns:1fr 1fr}
-  .asset-desc{display:none}
-  .formula{font-size:12px}
-  .fp{padding:8px 12px}
-  .tree-wrap{padding:22px 18px}
-  .tree-wrap pre{font-size:12px}
-  .cards{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+/* category color dots */
+.dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+  flex-shrink: 0;
 }
 
-/* ══════════════════════════════════════════════
-   RESPONSIVE — 520px
-══════════════════════════════════════════════ */
-@media(max-width:520px){
-  .main-inner{padding:24px 16px 64px}
-  .formula-meta{grid-template-columns:1fr 1fr}
-  .asset-row{grid-template-columns:1fr}
-  .asset-path,.asset-desc{display:none}
-  .browser-body{padding:16px}
-  .cards{grid-template-columns:1fr}
-  .suffix-grid{grid-template-columns:repeat(auto-fill,minmax(158px,1fr))}
-  .cheat-grid{grid-template-columns:repeat(auto-fill,minmax(158px,1fr))}
-  .author-name{font-size:26px}
+/* ── NAMING PATTERN BLOCK ── */
+.pattern-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+
+.pat-part {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+}
+
+.pat-part:not(:last-child)::after {
+  content: '+';
+  position: absolute;
+  margin-top: 0;
+}
+
+.pat-sep {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  color: var(--muted);
+  padding: 0 4px;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.pat-code {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  letter-spacing: 1px;
+}
+
+.pat-code.prefix  { background: rgba(79,142,255,0.15); color: var(--accent); border: 1px solid rgba(79,142,255,0.3); }
+.pat-code.base    { background: rgba(0,217,184,0.12); color: var(--accent3); border: 1px solid rgba(0,217,184,0.25); }
+.pat-code.variant { background: rgba(255,209,102,0.12); color: var(--yellow); border: 1px solid rgba(255,209,102,0.25); }
+.pat-code.suffix  { background: rgba(139,111,255,0.12); color: var(--accent2); border: 1px solid rgba(139,111,255,0.25); }
+
+.pat-label {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── EXAMPLE PILLS ── */
+.examples-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+
+.ex-pill {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+
+.ex-pill .p { color: var(--accent); }
+.ex-pill .b { color: var(--accent3); }
+.ex-pill .v { color: var(--yellow); }
+.ex-pill .s { color: var(--accent2); }
+
+/* ── CATEGORY SECTION HEADINGS ── */
+.cat-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 36px 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cat-heading h3 {
+  font-family: var(--font-ui);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: var(--tracking-normal);
+}
+
+.cat-badge {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  padding: 4px 11px;
+  border-radius: 100px;
+}
+
+/* ── FOLDER TREE ── */
+.tree-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tree-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 18px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+
+.tree-header span {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tree-header .tree-dots { display: flex; gap: 6px; }
+.tree-dots span { width: 10px; height: 10px; border-radius: 50%; }
+.tree-dots .d1 { background: #ff5f57; }
+.tree-dots .d2 { background: #fdbf24; }
+.tree-dots .d3 { background: #29c940; }
+
+.tree-body { padding: 20px 24px; }
+
+.tree-body pre {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 2.1;
+  color: var(--soft);
+  white-space: pre;
+}
+
+.tree-body pre .root  { color: var(--accent); font-weight: 700; }
+.tree-body pre .dir   { color: #fff; font-weight: 700; }
+.tree-body pre .file  { color: var(--soft); }
+.tree-body pre .cmt   { color: var(--muted); font-style: italic; }
+.tree-body pre .hi1   { color: var(--accent3); }
+.tree-body pre .hi2   { color: var(--yellow); }
+.tree-body pre .hi3   { color: var(--accent2); }
+
+/* ── INFO / TIP BLOCKS ── */
+.info {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px 20px;
+  border-radius: 10px;
+  margin: 16px 0;
+}
+
+.info.tip     { background: rgba(79,142,255,0.05);  border: 1px solid rgba(79,142,255,0.2); }
+.info.warning { background: rgba(255,209,102,0.05); border: 1px solid rgba(255,209,102,0.2); }
+.info.rule    { background: rgba(0,217,184,0.05);   border: 1px solid rgba(0,217,184,0.2); }
+.info.danger  { background: rgba(255,77,109,0.05);  border: 1px solid rgba(255,77,109,0.2); }
+
+.info-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+
+.info p {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: var(--leading-relaxed);
+  color: var(--soft);
+}
+
+.info strong { color: var(--text); font-weight: 700; }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 32px 0; }
+
+/* ── CASE TABLE ── */
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.case-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.case-card .case-name {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.case-card .case-example {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--accent3);
+  margin-bottom: 8px;
+}
+
+.case-card p {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  line-height: var(--leading-normal);
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 56px 72px 48px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.footer-inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.footer-author h3 {
+  font-family: var(--font-ui);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: var(--tracking-tight);
+  margin-bottom: 6px;
+}
+
+.footer-author .role-line {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: var(--tracking-normal);
+  margin-bottom: 4px;
+}
+
+.footer-author .institution-block {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.footer-author .institution-block p {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--soft);
+  line-height: var(--leading-relaxed);
+}
+
+.footer-author .institution-block .inst-name {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.footer-author .institution-block .univ-name {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: var(--text-base);
+  color: var(--accent2);
+}
+
+.footer-credits {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--muted);
+  line-height: var(--leading-relaxed);
+  text-align: right;
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-bottom-sig {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.footer-bottom-compat {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted);
+  opacity: 0.4;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  :root { --nav-w: 240px; }
+  section, .hero, footer { padding-left: 40px; padding-right: 40px; }
+}
+
+@media (max-width: 768px) {
+  nav { display: none; }
+  main { margin-left: 0; max-width: 100%; }
+  section, .hero, footer { padding: 40px 20px; }
+  .card-row { grid-template-columns: 1fr; }
+  .case-grid { grid-template-columns: 1fr; }
+  .footer-inner { flex-direction: column; }
+  .footer-credits { text-align: left; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+  .pattern-block { gap: 6px; }
 }
 </style>
 </head>
 <body>
 
-<!-- TOPBAR mobile -->
-<div class="topbar">
-  <div class="topbar-logo">UE5 · Style Guide</div>
-  <button class="topbar-toggle" id="menuToggle" aria-label="Menú">☰</button>
+<!-- ═══ SIDEBAR ═══ -->
+<nav>
+  <div class="nav-brand">
+    <span class="engine-tag">Unreal Engine 5</span>
+    <h2>Naming &amp; Folders<br><span>Style Guide</span></h2>
+  </div>
+  <ul>
+    <li class="nav-group-label">Fundamentos</li>
+    <li><a href="#intro" class="active"><span class="n">01</span>Introducción</a></li>
+    <li><a href="#cases"><span class="n">02</span>Tipos de Nomenclatura</a></li>
+    <li><a href="#pattern"><span class="n">03</span>Patrón de Naming</a></li>
+    <li class="nav-group-label">Assets</li>
+    <li><a href="#blueprints"><span class="n">04</span>Blueprints</a></li>
+    <li><a href="#meshes"><span class="n">05</span>Meshes</a></li>
+    <li><a href="#materials"><span class="n">06</span>Materials</a></li>
+    <li><a href="#textures"><span class="n">07</span>Textures</a></li>
+    <li><a href="#animations"><span class="n">08</span>Animations</a></li>
+    <li><a href="#vfx"><span class="n">09</span>VFX &amp; Audio</a></li>
+    <li class="nav-group-label">Estructura</li>
+    <li><a href="#folders"><span class="n">10</span>Estructura de Carpetas</a></li>
+    <li><a href="#example"><span class="n">11</span>Ejemplo Guiado</a></li>
+    <li><a href="#rules"><span class="n">12</span>Reglas de Oro</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<main>
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <div class="hero-tags">
+    <span class="htag htag-blue">Unreal Engine 5</span>
+    <span class="htag htag-purple">Asset Naming</span>
+    <span class="htag htag-teal">Folder Structure</span>
+  </div>
+  <h1>Naming Conventions<br>&amp; <span class="hi">Estructura</span> de<br><span class="hi2">Carpetas</span></h1>
+  <p class="hero-lead">
+    Guía profesional de organización de assets y carpetas en Unreal Engine 5. Aprende a nombrar correctamente cada tipo de asset y a mantener un proyecto limpio, escalable y listo para producción.
+  </p>
+  <div class="hero-stats">
+    <div class="hstat"><span class="hstat-num">50+</span><span class="hstat-label">Prefijos documentados</span></div>
+    <div class="hstat"><span class="hstat-num">8</span><span class="hstat-label">Categorías de assets</span></div>
+    <div class="hstat"><span class="hstat-num">1</span><span class="hstat-label">Patrón universal</span></div>
+    <div class="hstat"><span class="hstat-num">UE5</span><span class="hstat-label">Optimizado para</span></div>
+  </div>
 </div>
 
-<!-- OVERLAY mobile -->
-<div class="sidebar-overlay" id="overlay"></div>
-
-<div class="layout">
-
-<!-- ════════════ SIDEBAR ════════════ -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-brand">
-    <div class="brand-tag">Guía Docente · UE5</div>
-    <div class="brand-title">Naming &amp; <em>Folder Structure</em></div>
-    <div class="brand-sub">Unreal Engine 5 · Production Standards</div>
-  </div>
-
-  <nav class="sidebar-nav">
-    <div class="nav-group">
-      <div class="nav-group-label">Contenido</div>
-      <a class="nav-item active" href="#naming">
-        <span class="nav-item-num">01</span>¿Por qué Convenciones?
-      </a>
-      <a class="nav-item" href="#prefixes">
-        <span class="nav-item-num">02</span>Prefijos &amp; Sufijos
-      </a>
-      <a class="nav-item" href="#folders">
-        <span class="nav-item-num">03</span>Estructura de Carpetas
-      </a>
-      <a class="nav-item" href="#example">
-        <span class="nav-item-num">04</span>Ejemplo Guiado
-      </a>
-      <a class="nav-item" href="#rules">
-        <span class="nav-item-num">05</span>Reglas de Oro
-      </a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-label">Referencia Rápida</div>
-      <a class="nav-item" href="#cheatsheet">
-        <span class="nav-item-num">→</span>Cheat Sheet
-      </a>
-      <a class="nav-item" href="#texture-suffixes">
-        <span class="nav-item-num">→</span>Sufijos de Textura
-      </a>
-    </div>
-  </nav>
-
-  <div class="sidebar-footer">
-    <p>Basado en <strong>Allar/ue5-style-guide</strong><br>
-    Guía de referencia de la<br>comunidad UE5</p>
-  </div>
-</aside>
-
-<!-- ════════════ MAIN ════════════ -->
-<main class="main">
-<div class="main-inner">
-
-  <!-- HERO -->
-  <div class="hero">
-    <div class="eyebrow">Guía Docente · Unreal Engine 5</div>
-    <h1>Naming Conventions<br>&amp; <em>Folder Structure</em></h1>
-    <p class="hero-desc">Aprende a organizar y nombrar correctamente tus assets en UE5 desde el primer día, siguiendo estándares reales de producción profesional.</p>
-    <div class="badge-row">
-      <span class="badge badge-blue">📁 Folder Structure</span>
-      <span class="badge badge-purple">🏷 Naming Conventions</span>
-      <span class="badge badge-teal">⚡ Production Ready</span>
+<!-- ── SECTION 1: INTRO ── -->
+<section id="intro">
+  <div class="sec-header">
+    <span class="sec-num">01</span>
+    <div class="sec-title">
+      <h2>¿Por qué importa el Naming?</h2>
+      <p>La base de cualquier proyecto profesional en Unreal Engine</p>
     </div>
   </div>
 
-  <!-- ══ S1 ══ -->
-  <section class="section" id="naming">
-    <div class="section-head">
-      <span class="sec-num">01</span>
-      <h2 class="sec-title">¿Por qué Naming Conventions?</h2>
+  <div class="card-row">
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <h4>Búsqueda instantánea</h4>
+      <p>Con prefijos estandarizados, puedes encontrar cualquier asset en segundos escribiendo solo el prefijo en el Content Browser. <code>SM_</code> muestra todos los Static Meshes al instante.</p>
     </div>
-    <p class="lead">Las naming conventions son el lenguaje común del proyecto. Un proyecto que las sigue puede ser gestionado, buscado y mantenido con increíble facilidad — sin importar cuántas personas trabajen en él.</p>
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <h4>Trabajo en equipo</h4>
+      <p>Un proyecto con naming consistente permite que cualquier miembro del equipo entienda la estructura inmediatamente, sin necesidad de explicaciones ni documentación adicional.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h4>Evita errores costosos</h4>
+      <p>Los assets sin nombre correcto generan referencias rotas, conflictos de merge en control de versiones y errores difíciles de rastrear en producción. El naming previene todo eso.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <h4>Escalabilidad</h4>
+      <p>Un proyecto bien nombrado desde el inicio puede crecer de 100 a 10,000 assets sin volverse un caos. La estructura correcta ahorra semanas de trabajo en proyectos grandes.</p>
+    </div>
+  </div>
 
-    <div class="cards">
-      <div class="card">
-        <span class="card-icon">🔍</span>
-        <div class="card-title">Búsqueda Instantánea</div>
-        <div class="card-desc">Escribe <span class="chip">T_</span> en el Content Browser y filtra solo texturas. Sin convenciones, localizar un asset es una pesadilla.</div>
+  <div class="info tip" style="margin-top: 24px;">
+    <span class="info-icon">💡</span>
+    <p><strong>Regla fundamental:</strong> Nunca uses espacios en nombres de assets o carpetas. Unreal Engine puede manejarlos, pero causan problemas en exports, scripts, control de versiones y pipelines de producción. Usa siempre <strong>PascalCase</strong>.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 2: CASOS ── -->
+<section id="cases">
+  <div class="sec-header">
+    <span class="sec-num">02</span>
+    <div class="sec-title">
+      <h2>Tipos de Nomenclatura</h2>
+      <p>Los formatos de escritura usados en Unreal Engine y cuándo aplicar cada uno</p>
+    </div>
+  </div>
+
+  <div class="case-grid">
+    <div class="case-card">
+      <div class="case-name">PascalCase</div>
+      <div class="case-example">HeroCharacter</div>
+      <p>Cada palabra inicia con mayúscula. <strong>El estándar principal</strong> para nombres de assets, carpetas, clases y variables en UE5.</p>
+    </div>
+    <div class="case-card">
+      <div class="case-name">camelCase</div>
+      <div class="case-example">heroCharacter</div>
+      <p>Primera palabra en minúscula, siguientes con mayúscula. Usado internamente en algunas variables de Blueprint, nunca en nombres de assets.</p>
+    </div>
+    <div class="case-card">
+      <div class="case-name">Snake_Case</div>
+      <div class="case-example">Hero_Character</div>
+      <p>Palabras separadas por guion bajo. Usado en prefijos y sufijos de assets: <code>SM_Hero_Sword_01</code>. El separador de componentes del nombre.</p>
+    </div>
+    <div class="case-card">
+      <div class="case-name">SCREAMING_SNAKE</div>
+      <div class="case-example">HERO_CHARACTER</div>
+      <p>Todo en mayúsculas con guion bajo. Reservado para macros y constantes en código C++. <strong>No usar</strong> en nombres de assets.</p>
+    </div>
+  </div>
+
+  <div class="info rule" style="margin-top: 8px;">
+    <span class="info-icon">✅</span>
+    <p><strong>En UE5:</strong> Usa <strong>PascalCase</strong> para todo. El guion bajo (<code>_</code>) se usa exclusivamente como separador entre el prefijo, el nombre base, variante y sufijo del asset.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 3: PATRÓN ── -->
+<section id="pattern">
+  <div class="sec-header">
+    <span class="sec-num">03</span>
+    <div class="sec-title">
+      <h2>El Patrón Universal de Naming</h2>
+      <p>Una fórmula que aplica a todos los tipos de assets en Unreal Engine</p>
+    </div>
+  </div>
+
+  <div class="pattern-block">
+    <div class="pat-part">
+      <span class="pat-code prefix">Prefix_</span>
+      <span class="pat-label">Prefijo</span>
+    </div>
+    <div class="pat-sep">+</div>
+    <div class="pat-part">
+      <span class="pat-code base">BaseName</span>
+      <span class="pat-label">Nombre base</span>
+    </div>
+    <div class="pat-sep">+</div>
+    <div class="pat-part">
+      <span class="pat-code variant">_Variant</span>
+      <span class="pat-label">Variante (opcional)</span>
+    </div>
+    <div class="pat-sep">+</div>
+    <div class="pat-part">
+      <span class="pat-code suffix">_Suffix</span>
+      <span class="pat-label">Sufijo (opcional)</span>
+    </div>
+  </div>
+
+  <div class="examples-row">
+    <span class="ex-pill"><span class="p">SM_</span><span class="b">Rock</span><span class="v">_Large</span><span class="s">_01</span></span>
+    <span class="ex-pill"><span class="p">T_</span><span class="b">HeroArmor</span><span class="s">_D</span></span>
+    <span class="ex-pill"><span class="p">MI_</span><span class="b">GrassMaterial</span><span class="v">_Wet</span></span>
+    <span class="ex-pill"><span class="p">BP_</span><span class="b">EnemyBase</span></span>
+    <span class="ex-pill"><span class="p">SK_</span><span class="b">Character</span><span class="v">_Female</span></span>
+    <span class="ex-pill"><span class="p">AN_</span><span class="b">Run</span><span class="v">_Forward</span></span>
+    <span class="ex-pill"><span class="p">M_</span><span class="b">Metal</span><span class="v">_Brushed</span></span>
+    <span class="ex-pill"><span class="p">FX_</span><span class="b">Explosion</span><span class="v">_Big</span></span>
+  </div>
+
+  <div class="info tip">
+    <span class="info-icon">💡</span>
+    <p><strong>Nombre base compartido:</strong> Cuando un asset tiene múltiples archivos relacionados (mesh, textures, material), todos deben usar el mismo nombre base. <code>SK_Hero</code>, <code>T_Hero_D</code>, <code>T_Hero_N</code>, <code>MI_Hero</code> — el equipo sabe inmediatamente que pertenecen al mismo personaje.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 4: BLUEPRINTS ── -->
+<section id="blueprints">
+  <div class="sec-header">
+    <span class="sec-num">04</span>
+    <div class="sec-title">
+      <h2>Blueprints</h2>
+      <p>El tipo de asset más común en UE5 — lógica de juego y comportamiento</p>
+    </div>
+  </div>
+
+  <div class="prefix-table-wrap">
+    <table class="prefix-table">
+      <thead>
+        <tr>
+          <th>Prefijo</th>
+          <th>Tipo de Asset</th>
+          <th>Ejemplo</th>
+          <th>Uso</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">BP_</td>
+          <td class="cat">Blueprint Class</td>
+          <td><code>BP_PlayerCharacter</code></td>
+          <td>Cualquier Blueprint de clase estándar</td>
+        </tr>
+        <tr>
+          <td class="mono">BPI_</td>
+          <td class="cat">Blueprint Interface</td>
+          <td><code>BPI_Interactable</code></td>
+          <td>Interfaces para comunicación entre blueprints</td>
+        </tr>
+        <tr>
+          <td class="mono">BPF_</td>
+          <td class="cat">Blueprint Function Library</td>
+          <td><code>BPF_MathUtils</code></td>
+          <td>Librerías de funciones globales reutilizables</td>
+        </tr>
+        <tr>
+          <td class="mono">BPMAC_</td>
+          <td class="cat">Blueprint Macro Library</td>
+          <td><code>BPMAC_DebugTools</code></td>
+          <td>Macros reutilizables entre proyectos</td>
+        </tr>
+        <tr>
+          <td class="mono">GM_</td>
+          <td class="cat">Game Mode</td>
+          <td><code>GM_MainGame</code></td>
+          <td>Controladores de modo de juego</td>
+        </tr>
+        <tr>
+          <td class="mono">GS_</td>
+          <td class="cat">Game State</td>
+          <td><code>GS_MainGame</code></td>
+          <td>Estado global del juego</td>
+        </tr>
+        <tr>
+          <td class="mono">PS_</td>
+          <td class="cat">Player State</td>
+          <td><code>PS_Player</code></td>
+          <td>Estado individual de cada jugador</td>
+        </tr>
+        <tr>
+          <td class="mono">PC_</td>
+          <td class="cat">Player Controller</td>
+          <td><code>PC_Player</code></td>
+          <td>Lógica de input y control del jugador</td>
+        </tr>
+        <tr>
+          <td class="mono">WBP_</td>
+          <td class="cat">Widget Blueprint (UI)</td>
+          <td><code>WBP_HUD</code></td>
+          <td>Interfaces de usuario y elementos UMG</td>
+        </tr>
+        <tr>
+          <td class="mono">DA_</td>
+          <td class="cat">Data Asset</td>
+          <td><code>DA_WeaponStats</code></td>
+          <td>Assets de datos configurables</td>
+        </tr>
+        <tr>
+          <td class="mono">DT_</td>
+          <td class="cat">Data Table</td>
+          <td><code>DT_ItemDatabase</code></td>
+          <td>Tablas de datos en formato CSV/JSON</td>
+        </tr>
+        <tr>
+          <td class="mono">E_</td>
+          <td class="cat">Enumeration</td>
+          <td><code>E_WeaponType</code></td>
+          <td>Enumeraciones de estados o tipos</td>
+        </tr>
+        <tr>
+          <td class="mono">S_</td>
+          <td class="cat">Structure</td>
+          <td><code>S_ItemData</code></td>
+          <td>Estructuras de datos personalizadas</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── SECTION 5: MESHES ── -->
+<section id="meshes">
+  <div class="sec-header">
+    <span class="sec-num">05</span>
+    <div class="sec-title">
+      <h2>Meshes &amp; Geometría</h2>
+      <p>Modelos 3D estáticos, skeletal meshes y geometría auxiliar</p>
+    </div>
+  </div>
+
+  <div class="prefix-table-wrap">
+    <table class="prefix-table">
+      <thead>
+        <tr>
+          <th>Prefijo</th>
+          <th>Tipo de Asset</th>
+          <th>Ejemplo</th>
+          <th>Uso</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">SM_</td>
+          <td class="cat">Static Mesh</td>
+          <td><code>SM_Rock_Large_01</code></td>
+          <td>Cualquier modelo 3D sin rig ni animación</td>
+        </tr>
+        <tr>
+          <td class="mono">SK_</td>
+          <td class="cat">Skeletal Mesh</td>
+          <td><code>SK_HeroCharacter</code></td>
+          <td>Modelos con esqueleto para animación</td>
+        </tr>
+        <tr>
+          <td class="mono">SKEL_</td>
+          <td class="cat">Skeleton</td>
+          <td><code>SKEL_HeroCharacter</code></td>
+          <td>El esqueleto/rig asociado al Skeletal Mesh</td>
+        </tr>
+        <tr>
+          <td class="mono">PM_</td>
+          <td class="cat">Physics Asset</td>
+          <td><code>PM_HeroCharacter</code></td>
+          <td>Configuración de física para ragdoll y colisiones</td>
+        </tr>
+        <tr>
+          <td class="mono">LB_</td>
+          <td class="cat">Level Bounds</td>
+          <td><code>LB_ZoneSafeArea</code></td>
+          <td>Límites de nivel para streaming</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info warning">
+    <span class="info-icon">⚠️</span>
+    <p><strong>Variantes numéricas:</strong> Cuando tengas múltiples versiones de un mismo asset, usa sufijos numéricos con ceros: <code>SM_Rock_01</code>, <code>SM_Rock_02</code>, <code>SM_Rock_03</code>. Esto asegura orden correcto al ordenar por nombre (01 antes que 10).</p>
+  </div>
+</section>
+
+<!-- ── SECTION 6: MATERIALS ── -->
+<section id="materials">
+  <div class="sec-header">
+    <span class="sec-num">06</span>
+    <div class="sec-title">
+      <h2>Materials</h2>
+      <p>La familia de assets más grande — masters, instancias y funciones</p>
+    </div>
+  </div>
+
+  <div class="prefix-table-wrap">
+    <table class="prefix-table">
+      <thead>
+        <tr>
+          <th>Prefijo</th>
+          <th>Tipo de Asset</th>
+          <th>Ejemplo</th>
+          <th>Uso</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">M_</td>
+          <td class="cat">Material (Master)</td>
+          <td><code>M_Metal_Brushed</code></td>
+          <td>Material base. Contiene toda la lógica. No se aplica directamente a meshes.</td>
+        </tr>
+        <tr>
+          <td class="mono">MI_</td>
+          <td class="cat">Material Instance</td>
+          <td><code>MI_HeroArmor_Blue</code></td>
+          <td>Instancia derivada del master. Es lo que se aplica al mesh. Modificable en runtime.</td>
+        </tr>
+        <tr>
+          <td class="mono">MF_</td>
+          <td class="cat">Material Function</td>
+          <td><code>MF_CalculateFresnel</code></td>
+          <td>Fragmento de lógica reutilizable entre materiales. Como funciones de código.</td>
+        </tr>
+        <tr>
+          <td class="mono">MPC_</td>
+          <td class="cat">Material Parameter Collection</td>
+          <td><code>MPC_GlobalParams</code></td>
+          <td>Parámetros globales compartidos entre múltiples materiales (día/noche, clima).</td>
+        </tr>
+        <tr>
+          <td class="mono">MISE_</td>
+          <td class="cat">Material Instance (SubSurface)</td>
+          <td><code>MISE_Skin_Dark</code></td>
+          <td>Instancias especializadas para subsurface scattering (piel, cera, hojas).</td>
+        </tr>
+        <tr>
+          <td class="mono">PP_</td>
+          <td class="cat">Post Process Material</td>
+          <td><code>PP_OutlineEffect</code></td>
+          <td>Materiales para efectos de post-proceso (outlines, vignette, etc.).</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info tip">
+    <span class="info-icon">💡</span>
+    <p><strong>Flujo correcto de materiales:</strong> Siempre crea un <code>M_</code> Master primero con todos los parámetros expuestos. Luego crea tantas instancias <code>MI_</code> como variantes necesites. Nunca apliques el Master directamente a un mesh en producción.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 7: TEXTURES ── -->
+<section id="textures">
+  <div class="sec-header">
+    <span class="sec-num">07</span>
+    <div class="sec-title">
+      <h2>Textures</h2>
+      <p>El asset más abundante del proyecto — sufijos por tipo de mapa</p>
+    </div>
+  </div>
+
+  <div class="prefix-table-wrap">
+    <table class="prefix-table">
+      <thead>
+        <tr>
+          <th>Prefijo / Sufijo</th>
+          <th>Tipo</th>
+          <th>Ejemplo</th>
+          <th>Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">T_Name_D</td>
+          <td class="cat">Diffuse / Albedo / Base Color</td>
+          <td><code>T_HeroArmor_D</code></td>
+          <td>Color base del material. El mapa más fundamental.</td>
+        </tr>
+        <tr>
+          <td class="mono">T_Name_N</td>
+          <td class="cat">Normal Map</td>
+          <td><code>T_HeroArmor_N</code></td>
+          <td>Simula detalle de superficie sin geometría adicional.</td>
+        </tr>
+        <tr>
+          <td class="mono">T_Name_R</td>
+          <td class="cat">Roughness</td>
+          <td><code>T_HeroArmor_R</code></td>
+          <td>Controla qué tan rugosa o pulida es la superficie.</td>
+        </tr>
+        <tr>
+          <td class="mono">T_Name_M</td>
+          <td class="cat">Metallic</td>
+          <td><code>T_HeroArmor_M</code></td>
+          <td>Define qué partes de la superficie son metálicas.</td>
+        </tr>
+        <tr>
+          <td class="mono">T_Name_AO</td>
+          <td class="cat">Ambient Occlusion</td>
+          <td><code>T_HeroArmor_AO</code></td>
+          <td>Sombras de contacto para añadir profundidad visual.</td>
+        </tr>
+        <tr>
+          <td class="mono">T_Name_E</td>
+          <td class="cat">Emissive</td>
+          <td><code>T_HeroSuit_E</code></td>
+          <td>Mapa de emisión de luz propia del material.</td>
+        </tr>
+        <tr>
+          <td class="mono">T_Name_ORM</td>
+          <td class="cat">ORM (Packed)</td>
+          <td><code>T_HeroArmor_ORM</code></td>
+          <td>Occlusion + Roughness + Metallic empacados en RGB. Optimiza memoria.</td>
+        </tr>
+        <tr>
+          <td class="mono">T_Name_H</td>
+          <td class="cat">Height / Displacement</td>
+          <td><code>T_RockCliff_H</code></td>
+          <td>Mapa de desplazamiento para tessellation o parallax.</td>
+        </tr>
+        <tr>
+          <td class="mono">T_Name_OP</td>
+          <td class="cat">Opacity / Alpha</td>
+          <td><code>T_Leaves_OP</code></td>
+          <td>Máscara de transparencia para materiales translúcidos.</td>
+        </tr>
+        <tr>
+          <td class="mono">T_Name_SSS</td>
+          <td class="cat">Subsurface Scatter Color</td>
+          <td><code>T_Skin_SSS</code></td>
+          <td>Color de dispersión bajo la superficie (piel, cera).</td>
+        </tr>
+        <tr>
+          <td class="mono">HDR_</td>
+          <td class="cat">HDR / Environment</td>
+          <td><code>HDR_StudioLight_01</code></td>
+          <td>Imágenes de entorno de alto rango dinámico para IBL.</td>
+        </tr>
+        <tr>
+          <td class="mono">T_Name_UI</td>
+          <td class="cat">UI Texture</td>
+          <td><code>T_ButtonPlay_UI</code></td>
+          <td>Texturas exclusivas para interfaces de usuario.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info rule">
+    <span class="info-icon">✅</span>
+    <p><strong>Texture packing:</strong> Siempre que sea posible, empaqueta Roughness + Metallic + AO en un solo mapa ORM. Esto reduce el número de muestras de textura en el shader y mejora la performance significativamente en escenas complejas.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 8: ANIMATIONS ── -->
+<section id="animations">
+  <div class="sec-header">
+    <span class="sec-num">08</span>
+    <div class="sec-title">
+      <h2>Animations</h2>
+      <p>Sistema completo de animación — desde clips hasta state machines</p>
+    </div>
+  </div>
+
+  <div class="prefix-table-wrap">
+    <table class="prefix-table">
+      <thead>
+        <tr>
+          <th>Prefijo</th>
+          <th>Tipo de Asset</th>
+          <th>Ejemplo</th>
+          <th>Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">AN_</td>
+          <td class="cat">Animation Sequence</td>
+          <td><code>AN_Run_Forward</code></td>
+          <td>Clip de animación individual exportado desde DCC.</td>
+        </tr>
+        <tr>
+          <td class="mono">ABP_</td>
+          <td class="cat">Animation Blueprint</td>
+          <td><code>ABP_HeroCharacter</code></td>
+          <td>Lógica de animación con state machine y blend trees.</td>
+        </tr>
+        <tr>
+          <td class="mono">AM_</td>
+          <td class="cat">Animation Montage</td>
+          <td><code>AM_Attack_Combo01</code></td>
+          <td>Montajes de animación para secuencias complejas o combos.</td>
+        </tr>
+        <tr>
+          <td class="mono">BS_</td>
+          <td class="cat">Blend Space 1D</td>
+          <td><code>BS_Walk_Run</code></td>
+          <td>Blending entre animaciones en un eje (velocidad).</td>
+        </tr>
+        <tr>
+          <td class="mono">BS2D_</td>
+          <td class="cat">Blend Space 2D</td>
+          <td><code>BS2D_Locomotion</code></td>
+          <td>Blending en dos ejes (velocidad + dirección).</td>
+        </tr>
+        <tr>
+          <td class="mono">AIM_</td>
+          <td class="cat">Aim Offset</td>
+          <td><code>AIM_Rifle</code></td>
+          <td>Offsets aditivos para apuntar en diferentes ángulos.</td>
+        </tr>
+        <tr>
+          <td class="mono">ANIM_</td>
+          <td class="cat">Anim Composite</td>
+          <td><code>ANIM_JumpFull</code></td>
+          <td>Compuesto de múltiples clips de animación encadenados.</td>
+        </tr>
+        <tr>
+          <td class="mono">POSE_</td>
+          <td class="cat">Pose Asset</td>
+          <td><code>POSE_FaceSmile</code></td>
+          <td>Poses guardadas para blending facial o additive layers.</td>
+        </tr>
+        <tr>
+          <td class="mono">IK_</td>
+          <td class="cat">IK Rig / Retargeter</td>
+          <td><code>IK_HeroRig</code></td>
+          <td>Configuración de Inverse Kinematics y retargeting.</td>
+        </tr>
+        <tr>
+          <td class="mono">CR_</td>
+          <td class="cat">Control Rig</td>
+          <td><code>CR_HeroCharacter</code></td>
+          <td>Rigs procedurales para animación in-engine.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── SECTION 9: VFX & AUDIO ── -->
+<section id="vfx">
+  <div class="sec-header">
+    <span class="sec-num">09</span>
+    <div class="sec-title">
+      <h2>VFX &amp; Audio</h2>
+      <p>Partículas, efectos visuales y assets de sonido</p>
+    </div>
+  </div>
+
+  <div class="cat-heading">
+    <h3>VFX / Partículas</h3>
+    <span class="cat-badge" style="background: rgba(0,217,184,0.1); color: var(--accent3); border: 1px solid rgba(0,217,184,0.2);">Niagara</span>
+  </div>
+
+  <div class="prefix-table-wrap">
+    <table class="prefix-table">
+      <thead>
+        <tr><th>Prefijo</th><th>Tipo</th><th>Ejemplo</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="mono">FX_</td><td class="cat">Niagara System</td><td><code>FX_Explosion_Large</code></td><td>Sistema completo de efectos de partículas en Niagara.</td></tr>
+        <tr><td class="mono">FXE_</td><td class="cat">Niagara Emitter</td><td><code>FXE_Sparks_Base</code></td><td>Emisor individual reutilizable dentro de un sistema.</td></tr>
+        <tr><td class="mono">FXM_</td><td class="cat">Niagara Module</td><td><code>FXM_VelocityNoise</code></td><td>Módulo de comportamiento reutilizable entre emisores.</td></tr>
+        <tr><td class="mono">P_</td><td class="cat">Cascade Particle (Legacy)</td><td><code>P_Fire_Small</code></td><td>Sistema legacy Cascade. Migrar a Niagara cuando sea posible.</td></tr>
+        <tr><td class="mono">DECAL_</td><td class="cat">Decal Material</td><td><code>DECAL_BloodSplat</code></td><td>Materiales proyectados sobre superficies (manchas, marcas, impactos).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cat-heading">
+    <h3>Audio</h3>
+    <span class="cat-badge" style="background: rgba(255,209,102,0.1); color: var(--yellow); border: 1px solid rgba(255,209,102,0.2);">Sound</span>
+  </div>
+
+  <div class="prefix-table-wrap">
+    <table class="prefix-table">
+      <thead>
+        <tr><th>Prefijo</th><th>Tipo</th><th>Ejemplo</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="mono">SFX_</td><td class="cat">Sound Wave</td><td><code>SFX_Footstep_Grass</code></td><td>Archivo de audio crudo (.wav, .ogg). El asset base.</td></tr>
+        <tr><td class="mono">SC_</td><td class="cat">Sound Cue</td><td><code>SC_Footstep_Grass</code></td><td>Lógica de audio: randomización, capas, atenuación.</td></tr>
+        <tr><td class="mono">MUS_</td><td class="cat">Music Track</td><td><code>MUS_MainTheme</code></td><td>Pistas de música de fondo y soundtrack.</td></tr>
+        <tr><td class="mono">ATT_</td><td class="cat">Sound Attenuation</td><td><code>ATT_Footsteps</code></td><td>Perfil de atenuación 3D para sonidos en el espacio.</td></tr>
+        <tr><td class="mono">MIX_</td><td class="cat">Sound Mix</td><td><code>MIX_CombatMode</code></td><td>Mezcla de buses de audio para diferentes estados del juego.</td></tr>
+        <tr><td class="mono">SC_AMB_</td><td class="cat">Ambient Sound Cue</td><td><code>SC_AMB_Forest_Day</code></td><td>Sonidos ambientales de entorno.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── SECTION 10: FOLDER STRUCTURE ── -->
+<section id="folders">
+  <div class="sec-header">
+    <span class="sec-num">10</span>
+    <div class="sec-title">
+      <h2>Estructura de Carpetas</h2>
+      <p>La jerarquía profesional recomendada para cualquier proyecto UE5</p>
+    </div>
+  </div>
+
+  <div class="tree-block">
+    <div class="tree-header">
+      <span>Content Browser — Raíz del Proyecto</span>
+      <div class="tree-dots">
+        <span class="d1"></span><span class="d2"></span><span class="d3"></span>
       </div>
-      <div class="card">
-        <span class="card-icon">🤝</span>
-        <div class="card-title">Trabajo en Equipo</div>
-        <div class="card-desc">Todos identifican el tipo de asset a simple vista, sin abrir el archivo ni preguntar a nadie.</div>
-      </div>
-      <div class="card">
-        <span class="card-icon">🔄</span>
-        <div class="card-title">Migración Segura</div>
-        <div class="card-desc">Mover assets entre proyectos sin colisiones de nombres ni rutas rotas.</div>
-      </div>
-      <div class="card">
-        <span class="card-icon">📐</span>
-        <div class="card-title">Escalabilidad Real</div>
-        <div class="card-desc">Lo que funciona con 50 assets debe funcionar con 5,000. Las convenciones lo garantizan desde el inicio.</div>
-      </div>
     </div>
-
-    <div class="formula-box">
-      <div class="formula">
-        <span class="fp fp-pre">Prefix_</span>
-        <span class="fp-sep">+</span>
-        <span class="fp fp-bas">BaseAssetName</span>
-        <span class="fp-sep">+</span>
-        <span class="fp fp-var">_Variant</span>
-        <span class="fp-sep">+</span>
-        <span class="fp fp-suf">_Suffix</span>
-      </div>
-      <div class="formula-meta">
-        <div class="fm-item">
-          <div class="fm-label blue">PREFIX</div>
-          <div class="fm-desc">Tipo de asset. Acrónimo + guión bajo.<br>Ej: <span style="font-family:'Space Mono',monospace;color:var(--accent);font-size:12px">BP_</span>, <span style="font-family:'Space Mono',monospace;color:var(--accent);font-size:12px">SM_</span></div>
-        </div>
-        <div class="fm-item">
-          <div class="fm-label teal">BASE ASSET NAME</div>
-          <div class="fm-desc">Nombre corto en PascalCase.<br>Ej: <span style="font-family:'Space Mono',monospace;color:var(--accent3);font-size:12px">Hero</span>, <span style="font-family:'Space Mono',monospace;color:var(--accent3);font-size:12px">Rock</span>, <span style="font-family:'Space Mono',monospace;color:var(--accent3);font-size:12px">DoorWood</span></div>
-        </div>
-        <div class="fm-item">
-          <div class="fm-label purple">VARIANT <em style="font-weight:400;font-size:9px">(opcional)</em></div>
-          <div class="fm-desc">Variante descriptiva o numérica.<br>Ej: <span style="font-family:'Space Mono',monospace;color:var(--accent2);font-size:12px">_Evil</span>, <span style="font-family:'Space Mono',monospace;color:var(--accent2);font-size:12px">_01</span>, <span style="font-family:'Space Mono',monospace;color:var(--accent2);font-size:12px">_Rusty</span></div>
-        </div>
-        <div class="fm-item">
-          <div class="fm-label orange">SUFFIX <em style="font-weight:400;font-size:9px">(opcional)</em></div>
-          <div class="fm-desc">Info adicional del tipo. Principalmente en texturas.<br>Ej: <span style="font-family:'Space Mono',monospace;color:var(--warn);font-size:12px">_D</span>, <span style="font-family:'Space Mono',monospace;color:var(--warn);font-size:12px">_N</span>, <span style="font-family:'Space Mono',monospace;color:var(--warn);font-size:12px">_R</span></div>
-        </div>
-      </div>
-    </div>
-
-    <h3>Ejemplos de la fórmula en acción</h3>
-    <div class="pill-row">
-      <div class="pill"><span class="pill-pre">BP_</span><span class="pill-bas">Hero</span></div>
-      <div class="pill"><span class="pill-pre">SK_</span><span class="pill-bas">Goblin</span><span class="pill-var">_Warrior</span></div>
-      <div class="pill"><span class="pill-pre">SM_</span><span class="pill-bas">Rock</span><span class="pill-var">_01</span></div>
-      <div class="pill"><span class="pill-pre">T_</span><span class="pill-bas">Rock</span><span class="pill-suf">_D</span></div>
-      <div class="pill"><span class="pill-pre">MI_</span><span class="pill-bas">Metal</span><span class="pill-var">_Rusty</span></div>
-      <div class="pill"><span class="pill-pre">T_</span><span class="pill-bas">BrickWall</span><span class="pill-suf">_N</span></div>
-      <div class="pill"><span class="pill-pre">ABP_</span><span class="pill-bas">Hero</span></div>
-      <div class="pill"><span class="pill-pre">WBP_</span><span class="pill-bas">HUD</span><span class="pill-var">_Main</span></div>
-      <div class="pill"><span class="pill-pre">NS_</span><span class="pill-bas">Fire</span><span class="pill-var">_Large</span></div>
-      <div class="pill"><span class="pill-pre">AM_</span><span class="pill-bas">Hero</span><span class="pill-var">_Attack</span><span class="pill-suf">_01</span></div>
-    </div>
-
-    <div class="callout callout-info">
-      <span class="callout-icon">💡</span>
-      <div class="callout-body">
-        <strong>PascalCase siempre:</strong> Cada palabra del BaseAssetName empieza en mayúscula, sin espacios.<br>
-        ✅ Correcto: <code>DesertEagle</code> &nbsp;|&nbsp; ❌ Incorrecto: <code>desert eagle</code>, <code>desert_eagle</code>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ S2 ══ -->
-  <section class="section" id="prefixes">
-    <div class="section-head">
-      <span class="sec-num">02</span>
-      <h2 class="sec-title">Prefijos &amp; Sufijos por Categoría</h2>
-    </div>
-    <p class="lead">Cada tipo de asset tiene un prefijo asignado. Memoriza los más comunes — los usarás todos los días en cada proyecto.</p>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Tipo de Asset</th><th>Prefijo</th><th>Sufijo</th><th>Ejemplo</th><th>Descripción</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="cat-row"><td colspan="5">▸ Core Assets — Los más usados</td></tr>
-          <tr><td class="td-type">Blueprint</td><td class="td-pre c-blue">BP_</td><td class="td-suf c-none">—</td><td class="td-ex">BP_Hero</td><td class="td-desc">Lógica del juego, actores, componentes</td></tr>
-          <tr><td class="td-type">Static Mesh</td><td class="td-pre c-teal">SM_</td><td class="td-suf c-none">—</td><td class="td-ex">SM_Rock_01</td><td class="td-desc">Objetos 3D sin animación (props, ambiente)</td></tr>
-          <tr><td class="td-type">Skeletal Mesh</td><td class="td-pre c-teal">SK_</td><td class="td-suf c-none">—</td><td class="td-ex">SK_Hero</td><td class="td-desc">Meshes con esqueleto para animación</td></tr>
-          <tr><td class="td-type">Material</td><td class="td-pre c-purple">M_</td><td class="td-suf c-none">—</td><td class="td-ex">M_Metal_Rusty</td><td class="td-desc">Material base / master material</td></tr>
-          <tr><td class="td-type">Material Instance</td><td class="td-pre c-purple">MI_</td><td class="td-suf c-none">—</td><td class="td-ex">MI_Metal_Gold</td><td class="td-desc">Variante de un material base (más eficiente)</td></tr>
-          <tr><td class="td-type">Material Function</td><td class="td-pre c-purple">MF_</td><td class="td-suf c-none">—</td><td class="td-ex">MF_BlendLayers</td><td class="td-desc">Función reutilizable dentro de materiales</td></tr>
-          <tr><td class="td-type">Texture</td><td class="td-pre c-orange">T_</td><td class="td-suf">_D / _N / _R ...</td><td class="td-ex">T_Rock_D</td><td class="td-desc">Imagen 2D para materiales. Sufijo indica canal</td></tr>
-          <tr><td class="td-type">Widget Blueprint (UI)</td><td class="td-pre c-blue">WBP_</td><td class="td-suf c-none">—</td><td class="td-ex">WBP_HUD_Main</td><td class="td-desc">Interfaces de usuario, HUDs, menús</td></tr>
-
-          <tr class="cat-row"><td colspan="5">▸ Animación</td></tr>
-          <tr><td class="td-type">Animation Blueprint</td><td class="td-pre c-green">ABP_</td><td class="td-suf c-none">—</td><td class="td-ex">ABP_Hero</td><td class="td-desc">Controla la lógica de animación del personaje</td></tr>
-          <tr><td class="td-type">Animation Sequence</td><td class="td-pre c-green">A_</td><td class="td-suf c-none">—</td><td class="td-ex">A_Hero_Run</td><td class="td-desc">Clip de animación individual</td></tr>
-          <tr><td class="td-type">Animation Montage</td><td class="td-pre c-green">AM_</td><td class="td-suf c-none">—</td><td class="td-ex">AM_Hero_Attack</td><td class="td-desc">Combinación de animaciones para gameplay</td></tr>
-          <tr><td class="td-type">Blend Space</td><td class="td-pre c-green">BS_</td><td class="td-suf c-none">—</td><td class="td-ex">BS_Hero_Locomotion</td><td class="td-desc">Mezcla de animaciones por velocidad/dirección</td></tr>
-          <tr><td class="td-type">Skeleton</td><td class="td-pre c-green">SKEL_</td><td class="td-suf c-none">—</td><td class="td-ex">SKEL_Hero</td><td class="td-desc">Jerarquía de huesos del personaje</td></tr>
-          <tr><td class="td-type">Aim Offset</td><td class="td-pre c-green">AO_</td><td class="td-suf c-none">—</td><td class="td-ex">AO_Hero_Rifle</td><td class="td-desc">Offset de puntería para control de dirección</td></tr>
-
-          <tr class="cat-row"><td colspan="5">▸ Efectos Visuales (VFX)</td></tr>
-          <tr><td class="td-type">Niagara System</td><td class="td-pre c-yellow">NS_</td><td class="td-suf c-none">—</td><td class="td-ex">NS_Fire_Large</td><td class="td-desc">Sistema de partículas Niagara (UE5 recomendado)</td></tr>
-          <tr><td class="td-type">Particle System (Cascade)</td><td class="td-pre c-yellow">PS_</td><td class="td-suf c-none">—</td><td class="td-ex">PS_Smoke_Trail</td><td class="td-desc">Sistema de partículas legacy (UE4)</td></tr>
-
-          <tr class="cat-row"><td colspan="5">▸ Audio</td></tr>
-          <tr><td class="td-type">Sound Wave</td><td class="td-pre c-blue">A_</td><td class="td-suf c-none">—</td><td class="td-ex">A_Hero_Footstep</td><td class="td-desc">Archivo de audio base importado</td></tr>
-          <tr><td class="td-type">Sound Cue</td><td class="td-pre c-blue">A_</td><td class="td-suf">_Cue</td><td class="td-ex">A_Explosion_Cue</td><td class="td-desc">Lógica de audio: randomización, atenuación</td></tr>
-
-          <tr class="cat-row"><td colspan="5">▸ Inteligencia Artificial</td></tr>
-          <tr><td class="td-type">Behavior Tree</td><td class="td-pre c-teal">BT_</td><td class="td-suf c-none">—</td><td class="td-ex">BT_Enemy_Patrol</td><td class="td-desc">Árbol de comportamiento del NPC</td></tr>
-          <tr><td class="td-type">Blackboard</td><td class="td-pre c-teal">BB_</td><td class="td-suf c-none">—</td><td class="td-ex">BB_Enemy</td><td class="td-desc">Memoria / datos del Behavior Tree</td></tr>
-          <tr><td class="td-type">AI Controller</td><td class="td-pre c-teal">AIC_</td><td class="td-suf c-none">—</td><td class="td-ex">AIC_Enemy</td><td class="td-desc">Controlador de IA del personaje</td></tr>
-
-          <tr class="cat-row"><td colspan="5">▸ Blueprints Especiales &amp; Datos</td></tr>
-          <tr><td class="td-type">Blueprint Component</td><td class="td-pre c-blue">BP_</td><td class="td-suf">Component</td><td class="td-ex">BP_InventoryComponent</td><td class="td-desc">Componente reutilizable para Blueprints</td></tr>
-          <tr><td class="td-type">Blueprint Interface</td><td class="td-pre c-blue">BPI_</td><td class="td-suf c-none">—</td><td class="td-ex">BPI_Interactable</td><td class="td-desc">Interfaz para comunicación entre Blueprints</td></tr>
-          <tr><td class="td-type">Data Table</td><td class="td-pre c-purple">DT_</td><td class="td-suf c-none">—</td><td class="td-ex">DT_WeaponStats</td><td class="td-desc">Tabla de datos tipo CSV para balance del juego</td></tr>
-          <tr><td class="td-type">Enumeration</td><td class="td-pre c-purple">E</td><td class="td-suf c-none">—</td><td class="td-ex">EWeaponType</td><td class="td-desc">Lista de opciones (sin guión bajo)</td></tr>
-          <tr><td class="td-type">Mat. Param. Collection</td><td class="td-pre c-purple">MPC_</td><td class="td-suf c-none">—</td><td class="td-ex">MPC_GlobalParams</td><td class="td-desc">Parámetros globales de materiales</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3 id="texture-suffixes">Sufijos de Texturas</h3>
-    <p>Las texturas son el único tipo con sufijos extensivos. El prefijo siempre es <span class="chip">T_</span>, pero el sufijo indica qué canal contiene la imagen.</p>
-
-    <div class="suffix-grid">
-      <div class="suf-card"><span class="suf-tag">_D</span><span class="suf-name">Diffuse / Albedo / Base Color</span></div>
-      <div class="suf-card"><span class="suf-tag">_N</span><span class="suf-name">Normal Map</span></div>
-      <div class="suf-card"><span class="suf-tag">_R</span><span class="suf-name">Roughness Map</span></div>
-      <div class="suf-card"><span class="suf-tag">_M</span><span class="suf-name">Metallic Map</span></div>
-      <div class="suf-card"><span class="suf-tag">_E</span><span class="suf-name">Emissive Map</span></div>
-      <div class="suf-card"><span class="suf-tag">_AO</span><span class="suf-name">Ambient Occlusion</span></div>
-      <div class="suf-card"><span class="suf-tag">_A</span><span class="suf-name">Alpha / Opacity Mask</span></div>
-      <div class="suf-card"><span class="suf-tag">_S</span><span class="suf-name">Specular Map</span></div>
-      <div class="suf-card"><span class="suf-tag">_B</span><span class="suf-name">Bump Map</span></div>
-    </div>
-
-    <div class="callout callout-tip">
-      <span class="callout-icon">🎯</span>
-      <div class="callout-body">
-        <strong>Texture Packing:</strong> Empaca múltiples canales en una textura para ahorrar memoria. Los sufijos se combinan.<br><br>
-        RGB con Emissive + Roughness + AO → <code>T_Rock_ERO</code><br>
-        Diffuse con Alpha en canal A → <code>T_Leaf_DA</code>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ S3 ══ -->
-  <section class="section" id="folders">
-    <div class="section-head">
-      <span class="sec-num">03</span>
-      <h2 class="sec-title">Estructura de Carpetas</h2>
-    </div>
-    <p class="lead">La estructura de carpetas tiene el mismo peso que las naming conventions. Violaciones en cualquiera de las dos genera caos que crece exponencialmente con el proyecto.</p>
-
-    <div class="callout callout-info">
-      <span class="callout-icon">📌</span>
-      <div class="callout-body">
-        <strong>Principio fundamental:</strong> Organiza por <em>feature / lógica de gameplay</em>, no por tipo de asset. Carpetas como <code>Meshes/</code>, <code>Textures/</code> o <code>Materials/</code> son redundantes cuando usas prefijos — el Content Browser ya filtra por tipo.
-      </div>
-    </div>
-
-    <h3>Reglas de nomenclatura de carpetas</h3>
-    <div class="compare">
-      <div class="cmp-col good">
-        <div class="cmp-title">✓ Correcto</div>
-        <div class="cmp-item">✅ <span>Usar <code>PascalCase</code> para nombres de carpetas</span></div>
-        <div class="cmp-item">✅ <span>Todo dentro de <code>Content/NombreProyecto/</code></span></div>
-        <div class="cmp-item">✅ <span>Solo letras A-Z, números 0-9 y guión bajo</span></div>
-        <div class="cmp-item">✅ <span>Nombres cortos, descriptivos, en inglés</span></div>
-        <div class="cmp-item">✅ <span>Carpeta <code>Maps/</code> dedicada para todos los levels</span></div>
-        <div class="cmp-item">✅ <span>Carpeta <code>Core/</code> para assets fundamentales</span></div>
-      </div>
-      <div class="cmp-col bad">
-        <div class="cmp-title">✗ Incorrecto</div>
-        <div class="cmp-item">❌ <span>Espacios en nombres: <code>My Assets</code></span></div>
-        <div class="cmp-item">❌ <span>Assets sueltos en la raíz de <code>Content/</code></span></div>
-        <div class="cmp-item">❌ <span>Caracteres especiales: <code>@</code>, <code>#</code>, <code>!</code>, <code>-</code></span></div>
-        <div class="cmp-item">❌ <span>Carpetas redundantes: <code>Textures/</code>, <code>Meshes/</code></span></div>
-        <div class="cmp-item">❌ <span>Unicode o acentos: <code>Animación/</code></span></div>
-        <div class="cmp-item">❌ <span>Carpetas personales mezcladas con el proyecto</span></div>
-      </div>
-    </div>
-
-    <h3>Estructura recomendada — Visión general</h3>
-    <div class="tree-wrap"><pre><span style="color:var(--accent3);font-weight:700">Content/</span>
-├── <span style="color:var(--accent);font-weight:700">MyProject/</span>                   <span style="color:var(--dim);font-style:italic">← Carpeta raíz. NUNCA assets fuera de aquí.</span>
+    <div class="tree-body">
+<pre>
+<span class="root">Content/</span>
+│
+├── <span class="dir">ProjectName/</span>          <span class="cmt">← Todo tu contenido va aquí dentro</span>
 │   │
-│   ├── <span style="color:var(--accent3)">Art/</span>                     <span style="color:var(--dim);font-style:italic">← Assets visuales de ambiente</span>
-│   │   ├── Environment/
-│   │   ├── Nature/
-│   │   └── Industrial/
-│   │
-│   ├── <span style="color:var(--accent3)">Characters/</span>              <span style="color:var(--dim);font-style:italic">← Un subfolder por personaje</span>
+│   ├── <span class="hi1">Characters/</span>        <span class="cmt">← Personajes jugables y NPCs</span>
 │   │   ├── Hero/
 │   │   │   ├── Animations/
-│   │   │   └── Audio/
-│   │   ├── Enemy/
-│   │   └── Common/              <span style="color:var(--dim);font-style:italic">← Assets compartidos entre personajes</span>
+│   │   │   ├── Blueprints/
+│   │   │   ├── Materials/
+│   │   │   ├── Meshes/
+│   │   │   └── Textures/
+│   │   └── Enemies/
+│   │       ├── Goblin/
+│   │       └── Dragon/
 │   │
-│   ├── <span style="color:var(--warn);font-weight:700">Core/</span>                    <span style="color:var(--warn);font-style:italic">← ⚠️ Blueprints fundamentales. No tocar.</span>
-│   │   ├── Characters/          <span style="color:var(--dim);font-style:italic">← BP_HeroBase, BP_EnemyBase...</span>
-│   │   ├── GameModes/
-│   │   └── Weapons/
-│   │
-│   ├── <span style="color:var(--accent3)">Effects/</span>                 <span style="color:var(--dim);font-style:italic">← VFX (Niagara, partículas)</span>
-│   │   ├── Fire/
-│   │   ├── Smoke/
-│   │   └── Combat/
-│   │
-│   ├── <span style="color:var(--accent);font-weight:700">Maps/</span>                    <span style="color:var(--dim);font-style:italic">← TODOS los levels van aquí. Sin excepción.</span>
-│   │   ├── Level_01/
-│   │   └── Level_02/
-│   │
-│   ├── <span style="color:var(--accent3)">MaterialLibrary/</span>         <span style="color:var(--dim);font-style:italic">← Master materials y funciones compartidas</span>
-│   │   ├── Master/
-│   │   ├── Instances/
-│   │   └── Utility/
-│   │
-│   ├── <span style="color:var(--accent3)">Placeables/</span>              <span style="color:var(--dim);font-style:italic">← Actors/props que se instancian en el mundo</span>
+│   ├── <span class="hi2">Environment/</span>       <span class="cmt">← Escenarios, props y naturaleza</span>
+│   │   ├── Foliage/
 │   │   ├── Props/
-│   │   ├── Weapons/
-│   │   └── Pickups/
+│   │   │   ├── Industrial/
+│   │   │   └── Medieval/
+│   │   ├── Sky/
+│   │   └── Terrain/
 │   │
-│   ├── <span style="color:var(--accent3)">Sounds/</span>
-│   ├── <span style="color:var(--accent3)">UI/</span>
-│   └── <span style="color:var(--text)">Developers/</span>              <span style="color:var(--dim);font-style:italic">← Sandbox personal (oculto por defecto)</span>
-│       ├── ChristianMendez/
-│       └── JuanGarcia/
+│   ├── <span class="hi3">Materials/</span>         <span class="cmt">← Masters y funciones globales</span>
+│   │   ├── Functions/
+│   │   ├── Master/
+│   │   └── PostProcess/
+│   │
+│   ├── <span class="hi1">UI/</span>                <span class="cmt">← Todo lo relacionado con la UI</span>
+│   │   ├── Fonts/
+│   │   ├── Icons/
+│   │   ├── Textures/
+│   │   └── Widgets/
+│   │
+│   ├── <span class="hi2">VFX/</span>               <span class="cmt">← Efectos de partículas Niagara</span>
+│   │   ├── Combat/
+│   │   ├── Environment/
+│   │   └── Shared/
+│   │
+│   ├── <span class="hi3">Audio/</span>             <span class="cmt">← Todos los assets de sonido</span>
+│   │   ├── Ambient/
+│   │   ├── Music/
+│   │   ├── SFX/
+│   │   └── UI/
+│   │
+│   ├── <span class="hi1">Blueprints/</span>        <span class="cmt">← Lógica compartida global</span>
+│   │   ├── Core/
+│   │   ├── GameFramework/
+│   │   └── Interfaces/
+│   │
+│   ├── <span class="hi2">Maps/</span>              <span class="cmt">← Niveles del juego</span>
+│   │   ├── MainMenu/
+│   │   ├── Levels/
+│   │   └── Test/
+│   │
+│   └── <span class="hi3">Core/</span>              <span class="cmt">← Frameworks, data tables, configs</span>
+│       ├── DataTables/
+│       ├── GameModes/
+│       └── SaveGame/
 │
-└── <span style="color:var(--dim);font-style:italic">← Nunca assets en la raíz de Content/</span></pre></div>
-
-    <div class="callout callout-warn">
-      <span class="callout-icon">⚠️</span>
-      <div class="callout-body">
-        <strong>Core es zona restringida:</strong> La carpeta <code>Core/</code> contiene los Blueprints fundamentales como GameMode, PlayerController y GameState. Solo desarrolladores autorizados la modifican. Los alumnos deben hacer cambios en <em>clases hijas</em>, nunca en los Core assets directamente.
-      </div>
+└── <span class="dir">Developers/</span>           <span class="cmt">← Area de trabajo personal (NO en producción)</span>
+    ├── JohnDoe/
+    └── JaneSmith/</pre>
     </div>
-    <div class="callout callout-tip">
-      <span class="callout-icon">🧪</span>
-      <div class="callout-body">
-        <strong>Developers folder:</strong> Usa <code>Developers/TuNombre/</code> como área de sandbox personal para probar assets que aún no están listos. No aparecen en búsquedas de otros miembros del equipo.
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ S4 ══ -->
-  <section class="section" id="example">
-    <div class="section-head">
-      <span class="sec-num">04</span>
-      <h2 class="sec-title">Ejemplo Guiado — Proyecto Completo</h2>
-    </div>
-    <p class="lead">Veamos cómo aplicar todo lo aprendido en un proyecto llamado <span class="chip">ShadowRealm</span>. Así debe verse un proyecto bien organizado desde el primer día.</p>
-
-    <div class="browser">
-      <div class="browser-bar">
-        <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
-        <span class="browser-label">Content Browser — ShadowRealm/</span>
-      </div>
-      <div class="browser-body">
-        <div class="asset-group">
-          <div class="ag-title">📁 Characters / Hero</div>
-          <div class="asset-list">
-            <div class="asset-row"><span class="asset-name c-blue">BP_Hero</span><span class="asset-path">Characters/Hero/</span><span class="asset-desc">Blueprint del personaje principal</span></div>
-            <div class="asset-row"><span class="asset-name c-teal">SK_Hero</span><span class="asset-path">Characters/Hero/</span><span class="asset-desc">Skeletal Mesh del héroe</span></div>
-            <div class="asset-row"><span class="asset-name c-teal">SKEL_Hero</span><span class="asset-path">Characters/Hero/</span><span class="asset-desc">Esqueleto del héroe</span></div>
-            <div class="asset-row"><span class="asset-name c-green">ABP_Hero</span><span class="asset-path">Characters/Hero/</span><span class="asset-desc">Animation Blueprint</span></div>
-            <div class="asset-row"><span class="asset-name c-green">A_Hero_Idle</span><span class="asset-path">Characters/Hero/Animations/</span><span class="asset-desc">Animation Sequence — idle</span></div>
-            <div class="asset-row"><span class="asset-name c-green">A_Hero_Run</span><span class="asset-path">Characters/Hero/Animations/</span><span class="asset-desc">Animation Sequence — correr</span></div>
-            <div class="asset-row"><span class="asset-name c-green">AM_Hero_Attack_01</span><span class="asset-path">Characters/Hero/Animations/</span><span class="asset-desc">Animation Montage — ataque</span></div>
-            <div class="asset-row"><span class="asset-name c-green">BS_Hero_Locomotion</span><span class="asset-path">Characters/Hero/Animations/</span><span class="asset-desc">Blend Space — movimiento</span></div>
-          </div>
-        </div>
-        <div class="asset-group">
-          <div class="ag-title">📁 MaterialLibrary + Characters / Hero</div>
-          <div class="asset-list">
-            <div class="asset-row"><span class="asset-name c-purple">M_Character_Master</span><span class="asset-path">MaterialLibrary/Master/</span><span class="asset-desc">Material base para personajes</span></div>
-            <div class="asset-row"><span class="asset-name c-purple">MI_Hero_Default</span><span class="asset-path">Characters/Hero/</span><span class="asset-desc">Material Instance del héroe</span></div>
-            <div class="asset-row"><span class="asset-name c-orange">T_Hero_D</span><span class="asset-path">Characters/Hero/</span><span class="asset-desc">Textura — Diffuse / Base Color</span></div>
-            <div class="asset-row"><span class="asset-name c-orange">T_Hero_N</span><span class="asset-path">Characters/Hero/</span><span class="asset-desc">Textura — Normal Map</span></div>
-            <div class="asset-row"><span class="asset-name c-orange">T_Hero_RMO</span><span class="asset-path">Characters/Hero/</span><span class="asset-desc">Packed — Roughness+Metallic+AO</span></div>
-          </div>
-        </div>
-        <div class="asset-group">
-          <div class="ag-title">📁 Placeables / Props</div>
-          <div class="asset-list">
-            <div class="asset-row"><span class="asset-name c-teal">SM_Barrel_01</span><span class="asset-path">Placeables/Props/</span><span class="asset-desc">Static Mesh — barril de madera</span></div>
-            <div class="asset-row"><span class="asset-name c-teal">SM_Crate_Wooden_01</span><span class="asset-path">Placeables/Props/</span><span class="asset-desc">Static Mesh — caja variante 1</span></div>
-            <div class="asset-row"><span class="asset-name c-teal">SM_Crate_Wooden_02</span><span class="asset-path">Placeables/Props/</span><span class="asset-desc">Static Mesh — caja variante 2</span></div>
-            <div class="asset-row"><span class="asset-name c-purple">MI_Barrel_Rusty</span><span class="asset-path">Placeables/Props/</span><span class="asset-desc">Material Instance — barril oxidado</span></div>
-          </div>
-        </div>
-        <div class="asset-group">
-          <div class="ag-title">📁 Effects + Sounds + UI</div>
-          <div class="asset-list">
-            <div class="asset-row"><span class="asset-name c-yellow">NS_Fire_Large</span><span class="asset-path">Effects/Fire/</span><span class="asset-desc">Niagara System — fuego grande</span></div>
-            <div class="asset-row"><span class="asset-name c-yellow">NS_Combat_HitSpark</span><span class="asset-path">Effects/Combat/</span><span class="asset-desc">Niagara — impacto de ataque</span></div>
-            <div class="asset-row"><span class="asset-name c-blue">A_Hero_Footstep</span><span class="asset-path">Sounds/Characters/Hero/</span><span class="asset-desc">Sound Wave — paso</span></div>
-            <div class="asset-row"><span class="asset-name c-blue">A_SwordSwing_Cue</span><span class="asset-path">Sounds/Combat/</span><span class="asset-desc">Sound Cue — corte de espada</span></div>
-            <div class="asset-row"><span class="asset-name c-blue">WBP_HUD_Main</span><span class="asset-path">UI/HUD/</span><span class="asset-desc">Widget Blueprint — HUD principal</span></div>
-            <div class="asset-row"><span class="asset-name c-blue">WBP_Menu_Main</span><span class="asset-path">UI/Menus/</span><span class="asset-desc">Widget Blueprint — menú principal</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <h3>Árbol completo — ShadowRealm</h3>
-    <div class="tree-wrap"><pre><span style="color:var(--accent3)">Content/</span>
-└── <span style="color:var(--accent);font-weight:700">ShadowRealm/</span>
-    │
-    ├── <span style="color:var(--accent3)">Art/</span>
-    │   ├── Environment/
-    │   │   ├── Rocks/          <span style="color:var(--dim);font-style:italic">SM_Rock_01, SM_Rock_02, MI_Rock_Mossy...</span>
-    │   │   ├── Vegetation/
-    │   │   └── Architecture/
-    │   └── Skybox/
-    │
-    ├── <span style="color:var(--accent3)">Characters/</span>
-    │   ├── Hero/
-    │   │   └── Animations/     <span style="color:var(--dim);font-style:italic">A_, AM_, BS_, ABP_...</span>
-    │   ├── Enemy/
-    │   │   └── Animations/
-    │   └── Common/
-    │       ├── Animations/
-    │       └── Audio/
-    │
-    ├── <span style="color:var(--warn);font-weight:700">Core/</span>               <span style="color:var(--warn);font-style:italic">← ⚠️ No modificar sin autorización</span>
-    │   ├── Characters/         <span style="color:var(--dim);font-style:italic">BP_HeroBase, BP_EnemyBase...</span>
-    │   ├── GameModes/
-    │   └── Weapons/
-    │
-    ├── <span style="color:var(--accent3)">Effects/</span>
-    │   ├── Fire/               <span style="color:var(--dim);font-style:italic">NS_Fire_Large, NS_Fire_Small...</span>
-    │   ├── Smoke/
-    │   └── Combat/             <span style="color:var(--dim);font-style:italic">NS_HitSpark, NS_BloodSplat...</span>
-    │
-    ├── <span style="color:var(--accent);font-weight:700">Maps/</span>               <span style="color:var(--dim);font-style:italic">← Todos los levels aquí</span>
-    │   ├── Level_01/           <span style="color:var(--dim);font-style:italic">Dungeon_01_P, _Lighting, _Gameplay...</span>
-    │   └── Level_02/
-    │
-    ├── <span style="color:var(--accent3)">MaterialLibrary/</span>
-    │   ├── Master/             <span style="color:var(--dim);font-style:italic">M_Character_Master, M_Prop_Master...</span>
-    │   ├── Instances/
-    │   └── Utility/            <span style="color:var(--dim);font-style:italic">MF_BlendLayers, MPC_GlobalParams...</span>
-    │
-    ├── <span style="color:var(--accent3)">Placeables/</span>
-    │   ├── Props/              <span style="color:var(--dim);font-style:italic">SM_Barrel, SM_Crate...</span>
-    │   ├── Weapons/            <span style="color:var(--dim);font-style:italic">SM_Sword_01, SM_Bow_01...</span>
-    │   └── Pickups/            <span style="color:var(--dim);font-style:italic">BP_HealthPotion, BP_Key...</span>
-    │
-    ├── <span style="color:var(--accent3)">Sounds/</span>
-    │   ├── Ambient/
-    │   ├── Characters/
-    │   ├── Combat/
-    │   └── UI/
-    │
-    ├── <span style="color:var(--accent3)">UI/</span>
-    │   ├── HUD/                <span style="color:var(--dim);font-style:italic">WBP_HUD_Main...</span>
-    │   ├── Menus/              <span style="color:var(--dim);font-style:italic">WBP_Menu_Main, WBP_Menu_Pause...</span>
-    │   └── Inventory/
-    │
-    └── <span style="color:var(--text)">Developers/</span>         <span style="color:var(--dim);font-style:italic">← Sandbox personal (oculto por defecto)</span>
-        ├── ChristianMendez/
-        └── JuanGarcia/</pre></div>
-  </section>
-
-  <!-- ══ S5 ══ -->
-  <section class="section" id="rules">
-    <div class="section-head">
-      <span class="sec-num">05</span>
-      <h2 class="sec-title">Reglas de Oro</h2>
-    </div>
-    <p class="lead">Estos principios debes interiorizarlos como ley. Sin excepciones, sin atajos.</p>
-
-    <div class="cards" style="grid-template-columns:repeat(auto-fill,minmax(238px,1fr))">
-      <div class="card"><span class="card-icon">⚖️</span><div class="card-title">Las convenciones son ley</div><div class="card-desc">Un proyecto que las sigue se puede gestionar, buscar y mantener con facilidad. Tratarlas como opcionales destruye la productividad del equipo.</div></div>
-      <div class="card"><span class="card-icon">🏠</span><div class="card-title">Todo dentro del namespace</div><div class="card-desc">Ningún asset fuera de <span class="chip">Content/NombreProyecto/</span>. La raíz del Content Browser es para ThirdParty y Engine, jamás para tu proyecto.</div></div>
-      <div class="card"><span class="card-icon">🚫</span><div class="card-title">Sin espacios, jamás</div><div class="card-desc">Los espacios rompen herramientas de ingeniería, scripts de batch y procesos de build. PascalCase siempre, sin excepción.</div></div>
-      <div class="card"><span class="card-icon">📂</span><div class="card-title">Maps en su carpeta</div><div class="card-desc">Todos los levels viven dentro de <span class="chip">Maps/</span>. Simplifica el cooking, lighting builds y QA enormemente.</div></div>
-      <div class="card"><span class="card-icon">🔒</span><div class="card-title">Respeta Core</div><div class="card-desc">La carpeta <span class="chip">Core/</span> dice «no tocar». Haz tus cambios en clases hijas, nunca en los assets base del proyecto.</div></div>
-      <div class="card"><span class="card-icon">🧹</span><div class="card-title">Consistencia total</div><div class="card-desc">El proyecto debe parecer creado por una sola persona. La consistencia reduce el onboarding y los errores radicalmente.</div></div>
-    </div>
-
-    <div class="callout callout-warn">
-      <span class="callout-icon">🔥</span>
-      <div class="callout-body">
-        <strong>Nunca muevas assets después de referenciarlos.</strong> Mover assets genera redirectors en cadena que pueden romper referencias en todo el proyecto. Organiza bien desde el día uno — el costo de reorganizar después es enorme.
-      </div>
-    </div>
-
-    <h3 id="cheatsheet">Referencia Rápida — Cheat Sheet</h3>
-    <div class="cheat-grid">
-      <div class="cheat-card" style="background:rgba(74,143,255,.07);border-color:rgba(74,143,255,.22)"><div class="cheat-prefix" style="color:var(--accent)">BP_</div><div class="cheat-desc">Blueprint — actor, componente, gamemode</div></div>
-      <div class="cheat-card" style="background:rgba(0,207,168,.06);border-color:rgba(0,207,168,.18)"><div class="cheat-prefix" style="color:var(--accent3)">SM_</div><div class="cheat-desc">Static Mesh — objeto sin animación</div></div>
-      <div class="cheat-card" style="background:rgba(0,207,168,.06);border-color:rgba(0,207,168,.18)"><div class="cheat-prefix" style="color:var(--accent3)">SK_</div><div class="cheat-desc">Skeletal Mesh — objeto con esqueleto</div></div>
-      <div class="cheat-card" style="background:rgba(139,111,255,.07);border-color:rgba(139,111,255,.22)"><div class="cheat-prefix" style="color:var(--accent2)">M_</div><div class="cheat-desc">Material — shader / master material</div></div>
-      <div class="cheat-card" style="background:rgba(139,111,255,.07);border-color:rgba(139,111,255,.22)"><div class="cheat-prefix" style="color:var(--accent2)">MI_</div><div class="cheat-desc">Material Instance — variante eficiente</div></div>
-      <div class="cheat-card" style="background:rgba(255,107,53,.07);border-color:rgba(255,107,53,.22)"><div class="cheat-prefix" style="color:var(--warn)">T_</div><div class="cheat-desc">Texture — con sufijo de canal (_D, _N, _R...)</div></div>
-      <div class="cheat-card" style="background:rgba(45,222,152,.06);border-color:rgba(45,222,152,.18)"><div class="cheat-prefix" style="color:var(--green)">ABP_</div><div class="cheat-desc">Animation Blueprint</div></div>
-      <div class="cheat-card" style="background:rgba(45,222,152,.06);border-color:rgba(45,222,152,.18)"><div class="cheat-prefix" style="color:var(--green)">A_</div><div class="cheat-desc">Animation Sequence / Sound Wave</div></div>
-      <div class="cheat-card" style="background:rgba(45,222,152,.06);border-color:rgba(45,222,152,.18)"><div class="cheat-prefix" style="color:var(--green)">AM_</div><div class="cheat-desc">Animation Montage</div></div>
-      <div class="cheat-card" style="background:rgba(255,209,102,.06);border-color:rgba(255,209,102,.18)"><div class="cheat-prefix" style="color:var(--yellow)">NS_</div><div class="cheat-desc">Niagara System — VFX (UE5)</div></div>
-      <div class="cheat-card" style="background:rgba(74,143,255,.07);border-color:rgba(74,143,255,.22)"><div class="cheat-prefix" style="color:var(--accent)">WBP_</div><div class="cheat-desc">Widget Blueprint — UI / HUD</div></div>
-      <div class="cheat-card" style="background:rgba(0,207,168,.06);border-color:rgba(0,207,168,.18)"><div class="cheat-prefix" style="color:var(--accent3)">BT_</div><div class="cheat-desc">Behavior Tree — Inteligencia Artificial</div></div>
-      <div class="cheat-card" style="background:rgba(139,111,255,.07);border-color:rgba(139,111,255,.22)"><div class="cheat-prefix" style="color:var(--accent2)">DT_</div><div class="cheat-desc">Data Table — balance, stats</div></div>
-      <div class="cheat-card" style="background:rgba(45,222,152,.06);border-color:rgba(45,222,152,.18)"><div class="cheat-prefix" style="color:var(--green)">BS_</div><div class="cheat-desc">Blend Space — mezcla de animaciones</div></div>
-      <div class="cheat-card" style="background:rgba(74,143,255,.07);border-color:rgba(74,143,255,.22)"><div class="cheat-prefix" style="color:var(--accent)">BPI_</div><div class="cheat-desc">Blueprint Interface</div></div>
-      <div class="cheat-card" style="background:rgba(139,111,255,.07);border-color:rgba(139,111,255,.22)"><div class="cheat-prefix" style="color:var(--accent2)">MPC_</div><div class="cheat-desc">Material Parameter Collection</div></div>
-    </div>
-  </section>
-
-</div><!-- /main-inner -->
-
-<!-- ════════════ AUTHOR — ACADEMIC IDENTITY ════════════ -->
-<div class="author-section">
-  <div class="author-rule"></div>
-  <div class="author-inner">
-
-    <!-- Left: name + credentials -->
-    <div class="author-left">
-      <div class="author-role-tag">Créditos académicos</div>
-
-      <div class="author-name">Christian Mendez</div>
-
-      <div class="author-credentials">
-        <div class="author-cred-item highlight">Unreal Authorized Instructor</div>
-        <div class="author-cred-item highlight">Academic Director</div>
-      </div>
-
-      <div class="author-divider"></div>
-
-      <div class="author-institution">
-        <div class="author-degree">Material desarrollado para la</div>
-        <div class="author-school">Licenciatura en Animación y Efectos Digitales</div>
-        <div class="author-degree" style="margin-top:6px">Escuela de Arte y Diseño</div>
-        <div class="author-university">Universidad de Monterrey</div>
-      </div>
-    </div>
-
-    <!-- Right: source reference -->
-    <div class="author-right">
-      <div class="author-ref-label">Fuente de referencia</div>
-      <a class="author-ref-link" href="https://github.com/Allar/ue5-style-guide" target="_blank">Allar/ue5-style-guide</a>
-      <div class="author-ref-sub">La guía de estilo de referencia<br>de la comunidad UE5</div>
-    </div>
-
   </div>
-</div>
+
+  <div class="info danger" style="margin-top: 20px;">
+    <span class="info-icon">🚫</span>
+    <p><strong>Nunca coloques assets directamente en la raíz de Content/.</strong> Todo debe estar dentro de la carpeta del proyecto (<code>Content/ProjectName/</code>). Esto previene conflictos al migrar assets entre proyectos y mantiene el Content Browser limpio.</p>
+  </div>
+
+  <div class="info tip">
+    <span class="info-icon">💡</span>
+    <p><strong>Carpeta Developers:</strong> Cada miembro del equipo tiene su propia carpeta en <code>Content/Developers/NombreDelArtista/</code> para pruebas personales. Nada de esta carpeta va a producción ni se commitea a control de versiones.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 11: EJEMPLO GUIADO ── -->
+<section id="example">
+  <div class="sec-header">
+    <span class="sec-num">11</span>
+    <div class="sec-title">
+      <h2>Ejemplo Guiado — Personaje Hero</h2>
+      <p>Cómo organizar correctamente todos los assets de un personaje completo</p>
+    </div>
+  </div>
+
+  <p style="margin-bottom: 20px;">Imagina que estás creando el personaje principal de un juego. Así se ve la estructura <strong>correcta</strong> de todos sus assets:</p>
+
+  <div class="tree-block">
+    <div class="tree-header">
+      <span>Content/ProjectName/Characters/Hero/</span>
+      <div class="tree-dots">
+        <span class="d1"></span><span class="d2"></span><span class="d3"></span>
+      </div>
+    </div>
+    <div class="tree-body">
+<pre>
+<span class="dir">Hero/</span>
+│
+├── <span class="hi1">Meshes/</span>
+│   ├── <span class="file">SK_Hero.uasset</span>                <span class="cmt">← Skeletal Mesh</span>
+│   ├── <span class="file">SKEL_Hero.uasset</span>              <span class="cmt">← Skeleton / Rig</span>
+│   └── <span class="file">PM_Hero.uasset</span>                <span class="cmt">← Physics Asset</span>
+│
+├── <span class="hi2">Animations/</span>
+│   ├── <span class="file">ABP_Hero.uasset</span>               <span class="cmt">← Animation Blueprint</span>
+│   ├── <span class="file">BS2D_Hero_Locomotion.uasset</span>   <span class="cmt">← Blend Space 2D</span>
+│   ├── <span class="file">AN_Hero_Idle.uasset</span>
+│   ├── <span class="file">AN_Hero_Walk_Forward.uasset</span>
+│   ├── <span class="file">AN_Hero_Run_Forward.uasset</span>
+│   ├── <span class="file">AN_Hero_Jump_Start.uasset</span>
+│   ├── <span class="file">AN_Hero_Jump_Apex.uasset</span>
+│   ├── <span class="file">AN_Hero_Jump_Land.uasset</span>
+│   └── Montages/
+│       ├── <span class="file">AM_Hero_Attack_01.uasset</span>
+│       └── <span class="file">AM_Hero_Death.uasset</span>
+│
+├── <span class="hi3">Materials/</span>
+│   ├── <span class="file">MI_Hero_Body.uasset</span>           <span class="cmt">← Material Instance body</span>
+│   ├── <span class="file">MI_Hero_Armor.uasset</span>          <span class="cmt">← Material Instance armor</span>
+│   ├── <span class="file">MI_Hero_Face.uasset</span>           <span class="cmt">← Material Instance face</span>
+│   └── <span class="file">MI_Hero_Eyes.uasset</span>
+│
+├── <span class="hi1">Textures/</span>
+│   ├── <span class="file">T_Hero_Body_D.uasset</span>          <span class="cmt">← Diffuse</span>
+│   ├── <span class="file">T_Hero_Body_N.uasset</span>          <span class="cmt">← Normal</span>
+│   ├── <span class="file">T_Hero_Body_ORM.uasset</span>        <span class="cmt">← Occlusion/Roughness/Metal</span>
+│   ├── <span class="file">T_Hero_Armor_D.uasset</span>
+│   ├── <span class="file">T_Hero_Armor_N.uasset</span>
+│   ├── <span class="file">T_Hero_Armor_ORM.uasset</span>
+│   ├── <span class="file">T_Hero_Face_D.uasset</span>
+│   ├── <span class="file">T_Hero_Face_N.uasset</span>
+│   └── <span class="file">T_Hero_Face_SSS.uasset</span>        <span class="cmt">← Subsurface Scatter</span>
+│
+└── <span class="hi2">Blueprints/</span>
+    ├── <span class="file">BP_Hero.uasset</span>                <span class="cmt">← Blueprint principal</span>
+    └── <span class="file">BP_HeroController.uasset</span>     <span class="cmt">← Player Controller</span></pre>
+    </div>
+  </div>
+
+  <div class="info rule" style="margin-top: 20px;">
+    <span class="info-icon">✅</span>
+    <p><strong>Nota el patrón:</strong> Todos los assets del personaje Hero comparten el mismo nombre base <code>Hero</code>. Cualquier miembro del equipo que vea <code>T_Hero_Body_D</code> sabe inmediatamente que es la textura Diffuse del body del personaje Hero. Sin ambigüedad, sin búsqueda innecesaria.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 12: REGLAS DE ORO ── -->
+<section id="rules">
+  <div class="sec-header">
+    <span class="sec-num">12</span>
+    <div class="sec-title">
+      <h2>Reglas de Oro</h2>
+      <p>Los principios fundamentales que nunca debes romper</p>
+    </div>
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <div class="card-icon">🚫</div>
+      <h4>Sin espacios en ningún nombre</h4>
+      <p>Nunca: <code>Hero Character</code>. Siempre: <code>HeroCharacter</code>. Los espacios rompen scripts, exports y pipelines automatizados.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📁</div>
+      <h4>Todo dentro de ProjectName/</h4>
+      <p>Nunca pongas assets directamente en la raíz de Content. La carpeta del proyecto es el contenedor de todo tu trabajo.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔤</div>
+      <h4>Siempre con prefijo</h4>
+      <p>Si no sabes el prefijo exacto, búscalo antes de guardar. Un asset sin prefijo es imposible de identificar en un proyecto grande.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔗</div>
+      <h4>Nombre base compartido</h4>
+      <p>Todos los assets relacionados (mesh, textures, material, blueprint) deben compartir el mismo nombre base para facilitar búsquedas y relaciones.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔢</div>
+      <h4>Números con ceros</h4>
+      <p>Usa <code>_01</code>, <code>_02</code>, no <code>_1</code>, <code>_2</code>. Esto garantiza orden correcto alfabéticamente y permite hasta 99 variantes.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚠️</div>
+      <h4>Nunca renombrar assets referenciados</h4>
+      <p>En UE5 puedes renombrar y el engine actualiza las referencias, pero si compartes en equipo con control de versiones, coordinalo antes para evitar referencias rotas.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🧹</div>
+      <h4>Carpeta Developers = área de pruebas</h4>
+      <p>Lo que está en tu carpeta personal de Developers nunca va a producción. Es tu sandbox. Cuando algo esté listo, muévelo a la carpeta correcta del proyecto.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📐</div>
+      <h4>Consistencia sobre preferencia</h4>
+      <p>Si el equipo ya tiene un estilo establecido, síguelo aunque no sea tu favorito. La consistencia del proyecto siempre supera la preferencia individual.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-author">
+      <h3>Christian Mendez</h3>
+      <p class="role-line">Unreal Authorized Instructor &nbsp;·&nbsp; Academic Director</p>
+      <div class="institution-block">
+        <p>Material desarrollado para la</p>
+        <p><span class="inst-name">Licenciatura en Animación y Efectos Digitales</span></p>
+        <p style="margin-top: 6px;"><span class="inst-name">Escuela de Arte y Diseño</span></p>
+        <p><span class="univ-name">Universidad de Monterrey</span></p>
+      </div>
+    </div>
+    <div class="footer-credits">
+      <p>Basado en el UE5 Style Guide de Allar</p>
+      <p>github.com/Allar/ue5-style-guide</p>
+      <p>Prácticas estándar de la industria AAA</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-bottom-sig">Guía desarrollada por Christian Mendez</span>
+    <span class="footer-bottom-compat">Unreal Engine 5.4 / 5.5 / 5.6</span>
+  </div>
+</footer>
 
 </main>
-</div><!-- /layout -->
 
 <script>
-  const toggle  = document.getElementById('menuToggle');
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
+  const navLinks = document.querySelectorAll('nav ul li a');
 
-  function openSidebar()  { sidebar.classList.add('open'); overlay.classList.add('open'); document.body.style.overflow='hidden'; }
-  function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); document.body.style.overflow=''; }
-
-  toggle?.addEventListener('click', openSidebar);
-  overlay?.addEventListener('click', closeSidebar);
-  document.querySelectorAll('.nav-item').forEach(link => {
-    link.addEventListener('click', () => { if(window.innerWidth<=768) closeSidebar(); });
-  });
-
-  // Active nav highlight on scroll
-  const navItems = document.querySelectorAll('.nav-item[href^="#"]');
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if(e.isIntersecting){
-        navItems.forEach(n => n.classList.toggle('active', n.getAttribute('href')==='#'+e.target.id));
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
       }
     });
-  }, {rootMargin:'-15% 0px -75% 0px'});
-  document.querySelectorAll('section[id]').forEach(s => io.observe(s));
+  }, { rootMargin: '-15% 0px -75% 0px' });
+
+  document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
 </script>
+
 </body>
 </html>
